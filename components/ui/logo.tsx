@@ -1,27 +1,28 @@
 "use client"
 
-import { Button } from "./button";
+import { GalleryVerticalEndIcon } from "lucide-react";
+// import { Button } from "./button";
 
-type Props = {
-  children?: React.ReactNode;
-  size?: "xs" | "sm" | "default" | 'lg'
-}
+// type Props = {
+//   children?: React.ReactNode;
+//   size?: "xs" | "sm" | "default" | 'lg'
+// }
 
-const sizeClasses = {
-  default: "default",
-  xs: "xs",
-  sm: "sm",
-  lg: "lg",
-} as const
+// const sizeClasses = {
+//   default: "default",
+//   xs: "xs",
+//   sm: "sm",
+//   lg: "lg",
+// } as const
 
 
-export default function Logo({size="default", children}: Props) {
+export default function Logo() {
     return(
-        <div className="flex flex-row justify-baseline w-fit items-center gap-2">
-            <Button size={sizeClasses[size]}>Logo</Button>
-            {children}
-        </div>
-
-  
+          <a href="/" className="flex items-center gap-2 font-medium">
+            <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
+              <GalleryVerticalEndIcon className="size-4" />
+            </div>
+            PlumURL
+          </a>
     )
 }
