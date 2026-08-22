@@ -80,8 +80,11 @@ export default function Navbar() {
                                 <ListItem href="/features/evolving-alias-length" title="Evolving Alias Length">
                                     242,234 available aliases up to 3 characters.
                                 </ListItem>
-                                <ListItem href="/features/track-clickss" title="Track Clicks">
+                                <ListItem href="/features/track-clicks" title="Track Clicks">
                                     Track all your clicks on your links.
+                                </ListItem>
+                                <ListItem href="/features/custom-alias" title="Custom Alias">
+                                    Choose your ideal alias.
                                 </ListItem>
                                 <ListItem href="/features/analytics" title="Analytics">
                                     Explore who clicked, when, and why.
