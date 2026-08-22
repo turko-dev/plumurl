@@ -3,6 +3,15 @@
 @import "shadcn/tailwind.css";
 
 
+@theme {
+  --breakpoint-sm: 48rem;
+  --breakpoint-md: 64rem;
+  --breakpoint-lg: 82rem;
+  --breakpoint-xl: 96rem;
+
+  --breakpoint-2xl: 114rem;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
