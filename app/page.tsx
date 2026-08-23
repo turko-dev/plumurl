@@ -2,6 +2,7 @@ import Page from "@/components/page";
 import Navbar from "@/components/navbar";
 import PageContent from "@/components/pagecontent";
 import HeroForm from "@/components/hero-form";
+import Section from "@/components/section";
 export default function Home() {
   return (
       <Page>
@@ -10,8 +11,11 @@ export default function Home() {
           <HeroForm>
 
           </HeroForm>
+          <Section>
+            
 
-          <div className="w-full h-screen"></div>
+          </Section>
+
         
         </PageContent>
       </Page>
