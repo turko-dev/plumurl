@@ -1,13 +1,16 @@
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Field, FieldLabel } from "./ui/field";
+import HeroYourURLs from "./ui/hero-your-urls";
 import { Input } from "./ui/input";
 
 export default function HeroForm() {
     return(
-        <div className="w-full flex-col flex justify-center items-center p-4 h-screen  min-h-fit">
+        <div className="w-full flex-col flex justify-center items-center p-4 h-screen min-h-fit">
             <div className="flex flex-col justify-baseline lg:justify-end lg:items-end items-baseline gap-14">
                 <h1 className="text-8xl lg:text-9xl max-sm:text-5xl font-heading">The world's most simple URL shortener.</h1>
+
+                <div className="w-full lg:max-w-114 h-fit flex-col flex justify-end items-end gap-14">
                 <Field className="w-full lg:max-w-114 h-fit flex-col flex justify-between items-center">
                     <FieldLabel htmlFor="input-badge">
                         Enter your long URL to get started.
@@ -23,7 +26,10 @@ export default function HeroForm() {
                         />
                         <Button>Shorten URL</Button>
                     </div>
+                    
                 </Field>
+<HeroYourURLs />
+                </div>
             </div>
         </div>
     )
