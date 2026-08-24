@@ -22,21 +22,21 @@ export const containerClassName =
   "[&>div]:w-full [&>div]:max-w-md flex items-center justify-center min-h-svh"
 
 const chartData = [
-  { date: "2024-07-15", running: 450, swimming: 300 },
-  { date: "2024-07-16", running: 380, swimming: 420 },
-  { date: "2024-07-17", running: 520, swimming: 120 },
-  { date: "2024-07-18", running: 140, swimming: 550 },
-  { date: "2024-07-19", running: 600, swimming: 350 },
-  { date: "2024-07-20", running: 480, swimming: 400 },
+  { date: "2026-08-24", intranational: 450, international: 300 },
+  { date: "2026-08-25", intranational: 380, international: 420 },
+  { date: "2026-08-26", intranational: 520, international: 120 },
+  { date: "2026-08-27", intranational: 140, international: 550 },
+  { date: "2026-08-28", intranational: 600, international: 350 },
+  { date: "2026-08-29", intranational: 480, international: 400 },
 ]
 
 const chartConfig = {
-  running: {
-    label: "Running",
+  intranational: {
+    label: "Intranational",
     color: "var(--chart-1)",
   },
-  swimming: {
-    label: "Swimming",
+  international: {
+    label: "International",
     color: "var(--chart-2)",
   },
 } satisfies ChartConfig
@@ -47,7 +47,7 @@ export function DummyChart2() {
       <CardHeader>
         <CardTitle>Gather geographical data about your clicks</CardTitle>
         <CardDescription>
-          Test
+          Showing data for the week of the 29th of August
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -65,21 +65,25 @@ export function DummyChart2() {
               }}
             />
             <Bar
-              dataKey="running"
+              dataKey="intranational"
               stackId="a"
-              fill="var(--color-running)"
+              fill="var(--color-intranational)"
               radius={[0, 0, 4, 4]}
             />
             <Bar
-              dataKey="swimming"
+              dataKey="international"
               stackId="a"
-              fill="var(--color-swimming)"
+              fill="var(--color-international)"
               radius={[4, 4, 0, 0]}
             />
             <ChartTooltip
+
+              labelClassName="min-w-32"
+        
               content={<ChartTooltipContent />}
               cursor={false}
               defaultIndex={1}
+
             />
           </BarChart>
         </ChartContainer>

@@ -1,11 +1,13 @@
 "use client"
 
-import { Bar, BarChart, XAxis } from "recharts"
+import { TrendingUp } from "lucide-react"
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -16,28 +18,21 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 
-export const description = "A stacked bar chart with a legend"
-export const iframeHeight = "600px"
-export const containerClassName =
-  "[&>div]:w-full [&>div]:max-w-md flex items-center justify-center min-h-svh"
+export const description = "A line chart"
 
 const chartData = [
-  { date: "2024-07-15", running: 450, swimming: 300 },
-  { date: "2024-07-16", running: 380, swimming: 420 },
-  { date: "2024-07-17", running: 520, swimming: 120 },
-  { date: "2024-07-18", running: 140, swimming: 550 },
-  { date: "2024-07-19", running: 600, swimming: 350 },
-  { date: "2024-07-20", running: 480, swimming: 400 },
+  { month: "January", desktop: 32 },
+  { month: "February", desktop: 67 },
+  { month: "March", desktop: 237 },
+  { month: "April", desktop: 342 },
+  { month: "May", desktop: 208 },
+  { month: "June", desktop: 412 },
 ]
 
 const chartConfig = {
-  running: {
-    label: "Running",
+  desktop: {
+    label: "Desktop",
     color: "var(--chart-1)",
-  },
-  swimming: {
-    label: "Swimming",
-    color: "var(--chart-2)",
   },
 } satisfies ChartConfig
 
@@ -46,44 +41,48 @@ export function DummyChart1() {
     <Card>
       <CardHeader>
         <CardTitle>Analyze click behaviours over time</CardTitle>
-        <CardDescription>
-          Test
-        </CardDescription>
+        <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <LineChart
+            accessibilityLayer
+            data={chartData}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="date"
+              dataKey="month"
               tickLine={false}
-              tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => {
-                return new Date(value).toLocaleDateString("en-US", {
-                  weekday: "short",
-                })
-              }}
-            />
-            <Bar
-              dataKey="running"
-              stackId="a"
-              fill="var(--color-running)"
-              radius={[0, 0, 4, 4]}
-            />
-            <Bar
-              dataKey="swimming"
-              stackId="a"
-              fill="var(--color-swimming)"
-              radius={[4, 4, 0, 0]}
+              tickMargin={8}
+              tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
-              content={<ChartTooltipContent />}
               cursor={false}
-              defaultIndex={1}
+              content={<ChartTooltipContent hideLabel />}
             />
-          </BarChart>
+            <Line
+              dataKey="desktop"
+              type="natural"
+              stroke="var(--color-desktop)"
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
         </ChartContainer>
       </CardContent>
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 leading-none font-medium">
+          65.8% more clicks than last month. <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="leading-none text-muted-foreground">
+          Showing total clicks for the last 6 months
+        </div>
+      </CardFooter>
     </Card>
   )
 }
