@@ -15,17 +15,17 @@ export default function Home() {
         <PageContent>
           <HeroForm></HeroForm>
           <Section direction="row">
-        <div className="flex w-full max-w-sm flex-col gap-12 py-12">
-        <Marker>
-          <MarkerContent><h1 className="font-mono text-2xl">So, I can shorten thousands of links. All for free?</h1></MarkerContent>
-        </Marker>
-        <Marker variant="separator">
-          <MarkerIcon><SearchIcon /></MarkerIcon>
-          <MarkerContent className="font-mono text-md">Up to 2,400 URLs</MarkerContent>
-        </Marker>
-      </div>
-      
-      
+            <div className="flex w-full flex-col gap-12 py-12">
+            <Marker>
+              <MarkerContent><h1 className="font-mono text-lg">So, I can shorten thousands of links. All for free?</h1></MarkerContent>
+            </Marker>
+            <Marker variant="separator">
+              <MarkerIcon><SearchIcon /></MarkerIcon>
+              <MarkerContent className="font-mono text-md">Up to 2,400 URLs</MarkerContent>
+            </Marker>
+            <div className="min-h-screen flex w-full flex-col gap-4 p-4 bg-primary rounded-xl"></div>
+            
+            </div>
 
           </Section>
 

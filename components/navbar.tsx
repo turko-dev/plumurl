@@ -26,7 +26,7 @@ function ListItem({
 }
 export default function Navbar() {
     return(
-        <div className="fixed w-full h-fit flex-row justify-center flex items-center bg-white">
+        <div className="z-10 fixed w-full h-fit flex-row justify-center flex items-center bg-white">
             <div className="h-14 flex flex-row justify-between items-center p-4 w-full border-b">
                 <Logo />
                 <NavigationMenu>

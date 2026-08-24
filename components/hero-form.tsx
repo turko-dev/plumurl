@@ -32,7 +32,12 @@ import { useState } from "react";
 
 export default function HeroForm() {
 
-    const [shortenStatus, setShortenStatus] = useState<number>(200)
+    const [alias, setAlias] = useState<any>({
+        alert: 0,
+        response: null,
+        result: null
+    })
+
     const shortenFail = () => {
         return(
             <AlertDialogContent size="sm">
@@ -85,12 +90,36 @@ export default function HeroForm() {
     }
 
 
+
+
+
+    
+    const shortenAliasAlert = () => {
+        return (
+
+            <AlertDialogContent size="sm">
+                <Alert variant="default" className="max-w-md gap-2">
+                    <AlertTitle>Want to use an alias?</AlertTitle>
+                    <AlertDescription className="gap-2 flex-col justify-baseline items-baseline flex">
+                        <Input type="url" placeholder="/abc123 (optional)"/>
+                        Add a unique alias to your short URL with a minimum of 4 characters.
+                    </AlertDescription>
+                </Alert>
+                <AlertDialogFooter>
+                    <AlertDialogAction variant="default">Continue</AlertDialogAction>
+                    <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        )
+
+    }
+
     
 
     return(
         <div className="w-full flex-col flex justify-center items-center p-4 h-screen min-h-fit">
             <div className="flex flex-col justify-baseline lg:justify-end lg:items-end items-baseline gap-14">
-                <h1 className="shimmer text-8xl lg:text-9xl max-sm:text-5xl font-heading">The world's most simple URL shortener.</h1>
+                <h1 className="shimmer text-8xl lg:text-9xl max-sm:text-7xl font-heading">The world's most simple URL shortener.</h1>
 
                 <div className="w-full lg:max-w-192 h-fit flex-col flex justify-end items-end gap-14">
                 <Field className="w-full lg:max-w-192 h-fit flex-col flex justify-between items-center">
@@ -102,9 +131,9 @@ export default function HeroForm() {
                         <Input id="input-badge" type="url" placeholder="https://long.url/example/foobar"/>
                         <AlertDialog>
                             <AlertDialogTrigger render={<Button variant="default">Shorten URL</Button>}/>
-                            {shortenSuccess()}
+                            {shortenAliasAlert()}
                         </AlertDialog>
-
+                        {alias.alias_step}
                         <HeroYourURLs/>
 
                     </div>
