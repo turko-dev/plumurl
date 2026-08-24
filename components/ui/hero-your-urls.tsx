@@ -1,40 +1,81 @@
 "use client"
-import * as React from "react"
-import { ChevronsUpDown } from "lucide-react"
+import * as React from 'react'
+
+
 import { Button } from "@/components/ui/button"
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
+
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
+import {  CloudIcon } from 'lucide-react'
+import { Input } from './input'
 
 export default function HeroYourURLs() {
-
-    const [isOpen, setIsOpen] = React.useState(false)
+    
+    
     return(
-        <Collapsible
-      open={isOpen}
-      onOpenChange={setIsOpen}
-      className="flex w-full max-w-[350px] flex-col gap-2"
-    >
-      <div className="flex items-center justify-between gap-4 px-4">
-        <h4 className="text-sm font-mono">You don't have any URLs yet.</h4>
-        <CollapsibleTrigger render={<Button variant="ghost" size="icon" className="size-8"><ChevronsUpDown /><span className="sr-only">Toggle details</span></Button>} />
-      </div>
-      <div className="flex items-center justify-between rounded-md border px-4 py-2 text-sm">
-        <span className="text-muted-foreground">Status</span>
-        <span className="font-medium">Shipped</span>
-      </div>
-      <CollapsibleContent className="flex flex-col gap-2">
-        <div className="rounded-md border px-4 py-2 text-sm">
-          <p className="font-medium">Shipping address</p>
-          <p className="text-muted-foreground">100 Market St, San Francisco</p>
+         <Drawer showSwipeHandle>
+      <DrawerTrigger render={<Button variant="outline">View My URLs</Button>} />
+      <DrawerContent>
+        <DrawerHeader className="shimmer" >
+          <DrawerTitle className="text-lg">Nothing here yet.</DrawerTitle>
+          <DrawerDescription>You don't have any URLs at the moment.</DrawerDescription>
+        </DrawerHeader>
+        <div className="flex-1 p-4">
+          <div className="rounded-2xl flex-col flex justify-center items-center group-data-[swipe-axis=x]/drawer-popup:size-full group-data-[swipe-axis=y]/drawer-popup:h-80 group-data-[swipe-axis=y]/drawer-popup:w-full">
+                {/* <div className="p-4 w-full max-w-114 flex gap-2 flex-col sm:flex-row justify-baseline items-center">
+                        
+                        <Button variant="outline">Shorten URL</Button>
+                    </div>
+                    <p className="">Error Msg</p> */}
+          
+          
+                    <Empty className="border border-dashed">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <CloudIcon />
+        </EmptyMedia>
+        <EmptyDescription>
+          Paste your long URL here and we'll create a unique short URL for you.
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+         <div className="w-full flex gap-2 flex-row justify-baseline items-center">
+        <Input
+                            type="url"
+                            placeholder="https://long.url/example/foobar"
+                        />
+        <Button variant="outline">
+          Shorten URL
+        </Button>
+
+         </div>
+      </EmptyContent>
+    </Empty>
+          </div>
+          
         </div>
-        <div className="rounded-md border px-4 py-2 text-sm">
-          <p className="font-medium">Items</p>
-          <p className="text-muted-foreground">2x Studio Headphones</p>
-        </div>
-      </CollapsibleContent>
-    </Collapsible>
+        <DrawerFooter className="w-full h-fit flex justify-center items-center">
+          <DrawerClose render={
+                <Button>Close</Button>
+        } />
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
     )
 }
