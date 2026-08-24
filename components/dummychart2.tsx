@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -15,6 +16,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
+import { Globe, Globe2Icon, TrendingUp } from "lucide-react"
 
 export const description = "A stacked bar chart with a legend"
 export const iframeHeight = "600px"
@@ -32,7 +34,7 @@ const chartData = [
 
 const chartConfig = {
   intranational: {
-    label: "Intranational",
+    label: "UK",
     color: "var(--chart-1)",
   },
   international: {
@@ -88,6 +90,7 @@ export function DummyChart2() {
           </BarChart>
         </ChartContainer>
       </CardContent>
+      
     </Card>
   )
 }

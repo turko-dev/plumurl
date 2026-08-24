@@ -25,7 +25,7 @@ export default function Home() {
               <MarkerIcon><SearchIcon /></MarkerIcon>
               <MarkerContent className="font-mono text-md">Up to 2,400 URLs</MarkerContent>
             </Marker>
-            <div className="min-h-fit w-full grid grid-cols-2  gap-4">
+            <div className="min-h-fit w-full grid grid-cols-2 gap-4">
              <DummyChart1></DummyChart1>
              <DummyChart2></DummyChart2>
 
