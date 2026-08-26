@@ -8,6 +8,8 @@ import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker"
 import { SearchIcon } from "lucide-react";
 import { DummyChart1 } from "@/components/dummychart1";
 import { DummyChart2 } from "@/components/dummychart2";
+import { DummyChart3 } from "@/components/dummychart3";
+import { DummyCard1 } from "@/components/dummycard1";
 
 
 export default function Home() {
@@ -19,15 +21,17 @@ export default function Home() {
           <Section direction="row">
             <div className="flex w-full flex-col gap-12 py-12">
             <Marker className="shimmer">
-              <MarkerContent><h1 className="font-mono text-lg">So, I can shorten thousands of links. All for free?</h1></MarkerContent>
+              <MarkerContent><h1 className="font-mono text-lg">So, I can shorten thousands of links. All for £3 a month?</h1></MarkerContent>
             </Marker>
             <Marker className="shimmer" variant="separator">
               <MarkerIcon><SearchIcon /></MarkerIcon>
               <MarkerContent className="font-mono text-md">Up to 2,400 URLs</MarkerContent>
             </Marker>
-            <div className="min-h-fit w-full grid grid-cols-2 gap-4">
+            <div className="min-h-fit w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
              <DummyChart1></DummyChart1>
              <DummyChart2></DummyChart2>
+             <DummyChart3></DummyChart3>
+              <DummyCard1></DummyCard1>
 
             </div>
             </div>

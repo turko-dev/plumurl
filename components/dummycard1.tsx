@@ -1,0 +1,45 @@
+import { Badge } from "@/components/ui/badge"
+
+import { Button } from "@/components/ui/button"
+        import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
+import { TrendingUp } from "lucide-react"
+import { DummyCalendar } from "./dummycalendar"
+
+export function DummyCard1() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Analyze click behaviours over time</CardTitle>
+        <CardDescription>January - June 2024</CardDescription>
+      </CardHeader>
+      <CardContent className="h-full">
+
+
+        <DummyCalendar ></DummyCalendar>
+
+      </CardContent>
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 leading-none font-medium">
+          65.8% more clicks than last month <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="leading-none text-muted-foreground">
+          Showing total clicks for the last 6 months
+        </div>
+      </CardFooter>
+    </Card>
+    
+  )
+}
