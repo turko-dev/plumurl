@@ -2,7 +2,7 @@
 PlumURL is a modern URL shortener designed for fast link creation, clean analytics, and reliable redirect handling. It is intended as a full-stack project that demonstrates product thinking, scalable architecture, and a polished developer experience. However, the back-end is omitted from this repository for obvious reasons.
 <br/>
 <br/>
-<img src="https://github.com/turko-dev/plumurl/blob/7c8725044b1be04d0a31041eb58dfc5f022e7194/images/img1.png" />
+<kbd><img src="https://github.com/turko-dev/plumurl/blob/7c8725044b1be04d0a31041eb58dfc5f022e7194/images/img1.png" /></kbd>
 <br/>
 
 ## Features
@@ -28,6 +28,12 @@ PlumURL is suitable for:
 - Branded short links for businesses
 - QR code generation for print and event materials
 - Portfolio demonstration of full-stack engineering skills
+
+
+<br/>
+<br/>
+<kbd><img src="https://github.com/turko-dev/plumurl/blob/c0753df6e3675840f25ee99abeb2b422424b71ee/images/img2.png" /></kbd>
+<br/>
 
 ## Learn More
 Authored by [Mert Aygun](https://mertaygun.co.uk)
