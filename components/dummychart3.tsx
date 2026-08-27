@@ -54,20 +54,20 @@ const chartData = [
   { date: "2024-05-02", desktop: 293, mobile: 310 },
   { date: "2024-05-03", desktop: 247, mobile: 190 },
   { date: "2024-05-04", desktop: 385, mobile: 420 },
-  { date: "2024-05-05", desktop: 481, mobile: 390 },
-  { date: "2024-05-06", desktop: 498, mobile: 520 },
+  { date: "2024-05-05", desktop: 812, mobile: 390 },
+  { date: "2024-05-06", desktop: 918, mobile: 520 },
   { date: "2024-05-07", desktop: 388, mobile: 300 },
   { date: "2024-05-08", desktop: 149, mobile: 210 },
   { date: "2024-05-09", desktop: 227, mobile: 132 },
   { date: "2024-05-10", desktop: 293, mobile: 12 },
   { date: "2024-05-11", desktop: 335, mobile: 349 },
   { date: "2024-05-12", desktop: 197, mobile: 240 },
-  { date: "2024-05-13", desktop: 197, mobile: 160 },
-  { date: "2024-05-14", desktop: 448, mobile: 490 },
-  { date: "2024-05-15", desktop: 473, mobile: 380 },
-  { date: "2024-05-16", desktop: 338, mobile: 400 },
-  { date: "2024-05-17", desktop: 499, mobile: 420 },
-  { date: "2024-05-18", desktop: 315, mobile: 350 },
+  { date: "2024-05-13", desktop: 197, mobile: 82 },
+  { date: "2024-05-14", desktop: 448, mobile: 38 },
+  { date: "2024-05-15", desktop: 473, mobile: 49 },
+  { date: "2024-05-16", desktop: 338, mobile: 108 },
+  { date: "2024-05-17", desktop: 499, mobile: 120 },
+  { date: "2024-05-18", desktop: 315, mobile: 340 },
   { date: "2024-05-19", desktop: 235, mobile: 180 },
   { date: "2024-05-20", desktop: 177, mobile: 230 },
   { date: "2024-05-21", desktop: 82, mobile: 140 },
@@ -161,7 +161,7 @@ export function DummyChart3() {
                 <span className="text-xs text-muted-foreground">
                   {chartConfig[chart].label}
                 </span>
-                <span className="text-md leading-none font-bold lg:text-3xl">
+                <span className="text-md leading-none font-heading lg:text-3xl">
                   {total[key as keyof typeof total].toLocaleString()}
                 </span>
               </button>
