@@ -13,6 +13,7 @@ import { DummyCard1 } from "@/components/dummycard1";
 import { BasicCarousel } from "@/components/basiccarousel";
 import { CoreFeaturesCarousel } from "@/components/corefeaturescarousel";
 import { IndividualHoverCard } from "@/components/individual";
+import Footer from "@/components/footer";
 
 
 export default function Home() {
@@ -57,6 +58,7 @@ export default function Home() {
 
         
         </PageContent>
+        <Footer />
       </Page>
   );
 }
