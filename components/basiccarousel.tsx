@@ -75,15 +75,6 @@ export function BasicCarousel() {
                 </div>
         <Separator />
         </div>,
-
-        <div className="flex h-full max-w-sm flex-col gap-4 text-sm justify-center">
-                <div className="flex flex-col gap-1.5">
-                    <div className="leading-none font-medium">Scheduled launch page</div>
-                    <div className="text-muted-foreground">Set a date and time to change your long URL.</div>
-                </div>
-        <Separator />
-        </div>,
-
     ]
 
   return (
