@@ -2,7 +2,6 @@
 
 import { LoginForm } from "@/components/login-form"
 import Navbar from "@/components/navbar"
-import { GalleryVerticalEndIcon } from "lucide-react"
 
 export default function LoginPage() {
   return (
