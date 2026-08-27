@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link";
 import Logo from "./ui/logo";
 import {
@@ -8,6 +9,9 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
+import { Button } from "./ui/button";
+import { useEffect, useState } from "react";
+import { MobileNavbar } from "./mobilenavbar";
 
 function ListItem({
   title,
@@ -25,14 +29,31 @@ function ListItem({
   )
 }
 export default function Navbar() {
+
+    const [isMobile, setIsMobile] = useState<boolean>(false)
+
+
+    useEffect(() => {
+        const isMobile = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+        isMobile();
+        window.addEventListener('resize', isMobile);
+        return () => window.removeEventListener('resize', isMobile);
+}, []);
+
+
     return(
-        <div className="z-10 fixed w-full h-fit flex-row justify-center flex items-center bg-white">
+        <div className="z-10000 fixed w-full h-fit flex-row justify-center flex items-center bg-white">
             <div className="h-14 flex flex-row justify-between items-center p-4 w-full border-b">
                 <Logo />
+                {isMobile ?
+                // Mobile Navbar
+                <MobileNavbar />
+                : 
+                // Desktop Navbar
                 <NavigationMenu>
                     <NavigationMenuList>
-
-
                         {/* Item One */}
                         <NavigationMenuItem>
                             <NavigationMenuTrigger>Use Cases</NavigationMenuTrigger>
@@ -50,7 +71,6 @@ export default function Navbar() {
                                 </ul>
                             </NavigationMenuContent>
                         </NavigationMenuItem>
-
                         {/* Item Two */}
                         <NavigationMenuItem>
                             <NavigationMenuTrigger>Platform</NavigationMenuTrigger>
@@ -68,7 +88,6 @@ export default function Navbar() {
                                 </ul>
                             </NavigationMenuContent>
                         </NavigationMenuItem>
-
                         {/* Item Three */}
                         <NavigationMenuItem>
                             <NavigationMenuTrigger>Features</NavigationMenuTrigger>
@@ -91,11 +110,16 @@ export default function Navbar() {
                                 </ListItem>
                                 </ul>
                             </NavigationMenuContent>
-                        </NavigationMenuItem>
-
-
+                         </NavigationMenuItem>
+                         <div className="flex flex-row justify-baseline items-center gap-2 mx-4">
+                            <Button variant="default">Log In</Button>
+                            <Button variant="outline">Sign Up</Button>
+                        </div>
                     </NavigationMenuList>
                 </NavigationMenu>
+                }
+
+                
             </div>
         </div>
     )
