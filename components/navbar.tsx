@@ -112,8 +112,8 @@ export default function Navbar() {
                             </NavigationMenuContent>
                          </NavigationMenuItem>
                          <div className="flex flex-row justify-baseline items-center gap-2 mx-4">
-                            <Button variant="default">Log In</Button>
-                            <Button variant="outline">Sign Up</Button>
+                            <a href="/log-in"><Button variant="default">Log In</Button></a>
+                            <a href="/sign-up"><Button variant="outline">Sign Up</Button></a>
                         </div>
                     </NavigationMenuList>
                 </NavigationMenu>
