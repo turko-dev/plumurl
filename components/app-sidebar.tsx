@@ -55,7 +55,7 @@ export function AppSidebar({ route, ...props }: {route: string, props?: React.Co
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" render={<a href="#" />}>
+            <SidebarMenuButton size="lg" render={<a href="/resources" />}>
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-foreground text-sidebar-primary-foreground">
                 <GalleryVerticalEndIcon className="size-4" />
               </div>
