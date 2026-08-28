@@ -13,6 +13,11 @@
 # testing
 /coverage
 
+
+/dashboard
+
+
+
 # next.js
 /.next/
 /out/
