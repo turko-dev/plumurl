@@ -14,8 +14,8 @@
 /coverage
 
 #ignore backend files
-
 *.ts
+
 
 
 # next.js
