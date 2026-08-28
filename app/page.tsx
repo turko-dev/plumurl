@@ -19,7 +19,10 @@ import Footer from "@/components/footer";
 export default function Home() {
   return (
       <Page>
+        
+        {/* Navbar */}
         <Navbar />
+
         <PageContent>
 
           {/* Hero Section */}
@@ -36,7 +39,6 @@ export default function Home() {
               <CoreFeaturesCarousel />
             </div>
           </Section>
-
           
           {/* Analytics Section */}
           <Section direction="row">
@@ -55,10 +57,11 @@ export default function Home() {
             <BasicCarousel/>
             </div>
           </Section>
-
-        
         </PageContent>
+
+        {/* Footer */}
         <Footer />
+
       </Page>
   );
 }
