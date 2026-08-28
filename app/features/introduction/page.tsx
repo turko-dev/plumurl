@@ -1,12 +1,11 @@
 
-import Navbar from "@/components/navbar";
 import Page from "@/components/page";
 import PageContent from "@/components/pagecontent";
 
-export default function GettingStartedWorkflow() {
+
+export default function FeaturesIntroduction() {
     return (
             <Page>
-                <Navbar />
                 <PageContent>
 
                 </PageContent>

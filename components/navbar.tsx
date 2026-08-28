@@ -93,7 +93,7 @@ export default function Navbar() {
                             <NavigationMenuTrigger>Features</NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                 <ul className="w-96">
-                                <ListItem href="/features/short-url-rich-graphs" title="Short URL Rich Graphs">
+                                <ListItem href="/features/short-url-rich-links" title="Short URL Rich Links">
                                     Add custom social cards for your links.
                                 </ListItem>
                                 <ListItem href="/features/evolving-alias-length" title="Evolving Alias Length">
