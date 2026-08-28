@@ -3,10 +3,10 @@ import Page from "@/components/page";
 import ResourcesDashboard from "@/components/resources-dashboard";
 
 
-export default function FeaturesIntroduction() {
+export default function FeaturesShortURLRichLinks() {
     return (
         <Page>
-            <ResourcesDashboard route="/features/introduction">
+            <ResourcesDashboard route="/features/short-url-rich-links">
             
             </ResourcesDashboard>
         </Page>

@@ -3,10 +3,10 @@ import Page from "@/components/page";
 import ResourcesDashboard from "@/components/resources-dashboard";
 
 
-export default function FeaturesIntroduction() {
+export default function FeaturesTrackClicks() {
     return (
         <Page>
-            <ResourcesDashboard route="/features/introduction">
+            <ResourcesDashboard route="/features/track-clicks">
             
             </ResourcesDashboard>
         </Page>

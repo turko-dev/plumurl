@@ -20,137 +20,30 @@ import { GalleryVerticalEndIcon } from "lucide-react"
 const data = {
   navMain: [
     {
-      title: "Getting Started",
-      url: "#",
+      title: "Getting Started", url: "/getting-started/introduction",
       items: [
         {
-          title: "Installation",
-          url: "#",
-        },
-        {
-          title: "Project Structure",
-          url: "#",
+          title: "Workflow", url: "/getting-started/workflow",
         },
       ],
     },
     {
-      title: "Build Your Application",
-      url: "#",
+      title: "Features", url: "/features/introduction",
       items: [
         {
-          title: "Routing",
-          url: "#",
+          title: "Track Clicks", url: "/features/track-clicks",
         },
         {
-          title: "Data Fetching",
-          url: "#",
-          isActive: true,
+          title: "Custom Alias", url: "/features/custom-alias",
         },
         {
-          title: "Rendering",
-          url: "#",
+          title: "Evolving Alias Length", url: "/features/evolving-alias-length",
         },
         {
-          title: "Caching",
-          url: "#",
+          title: "Short URL Rich Links", url: "/features/short-url-rich-links",
         },
         {
-          title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
-        {
-          title: "Upgrading",
-          url: "#",
-        },
-        {
-          title: "Examples",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "API Reference",
-      url: "#",
-      items: [
-        {
-          title: "Components",
-          url: "#",
-        },
-        {
-          title: "File Conventions",
-          url: "#",
-        },
-        {
-          title: "Functions",
-          url: "#",
-        },
-        {
-          title: "next.config.js Options",
-          url: "#",
-        },
-        {
-          title: "CLI",
-          url: "#",
-        },
-        {
-          title: "Edge Runtime",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Architecture",
-      url: "#",
-      items: [
-        {
-          title: "Accessibility",
-          url: "#",
-        },
-        {
-          title: "Fast Refresh",
-          url: "#",
-        },
-        {
-          title: "Next.js Compiler",
-          url: "#",
-        },
-        {
-          title: "Supported Browsers",
-          url: "#",
-        },
-        {
-          title: "Turbopack",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Community",
-      url: "#",
-      items: [
-        {
-          title: "Contribution Guide",
-          url: "#",
+          title: "Analytics", url: "/features/analytics",
         },
       ],
     },
@@ -163,12 +56,12 @@ export function AppSidebar({ route, ...props }: {route: string, props?: React.Co
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" render={<a href="#" />}>
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-foreground text-sidebar-primary-foreground">
                 <GalleryVerticalEndIcon className="size-4" />
               </div>
               <div className="flex flex-col gap-0.5 leading-none">
-                <span className="font-medium">Documentation</span>
-                <span className="">v1.0.0</span>
+                <span className="font-heading">Resources</span>
+                <span className="text-xs font-sans text-neutral-500">last updated 28th Aug</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -180,7 +73,8 @@ export function AppSidebar({ route, ...props }: {route: string, props?: React.Co
             {data.navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
-                  render={<a href={item.url} className="font-medium" />}
+
+                  render={<a href={item.url} className={`${item.url === route ? "underline" : ""} font-heading text-lg`} />}
                 >
                   {item.title}
                 </SidebarMenuButton>
@@ -189,7 +83,8 @@ export function AppSidebar({ route, ...props }: {route: string, props?: React.Co
                     {item.items.map((item) => (
                       <SidebarMenuSubItem key={item.title}>
                         <SidebarMenuSubButton
-                          isActive={item.isActive}
+                        className="font-sans text-neutral-500"
+                          isActive={item.url === route}
                           render={<a href={item.url} />}
                         >
                           {item.title}
