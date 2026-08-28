@@ -14,7 +14,7 @@
 /coverage
 
 
-.ts
+*.ts
 
 
 # next.js
