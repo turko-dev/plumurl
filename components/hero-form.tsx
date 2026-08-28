@@ -5,29 +5,20 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogMedia,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { AlertCircleIcon, Circle, CircleCheckIcon } from "lucide-react"
+import { AlertCircleIcon, CircleCheckIcon } from "lucide-react"
 import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert"
-import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Field, FieldLabel } from "./ui/field";
 import HeroYourURLs from "./ui/hero-your-urls";
 import { Input } from "./ui/input";
 import { useState } from "react";
-
-
-
-
 
 
 export default function HeroForm() {
@@ -121,8 +112,8 @@ export default function HeroForm() {
             <div className="flex flex-col justify-baseline lg:justify-end lg:items-end items-baseline gap-14">
                 <h1 className="shimmer text-8xl lg:text-9xl max-sm:text-7xl font-heading">The world's most simple URL shortener.</h1>
 
-                <div className="w-full lg:max-w-192 h-fit flex-col flex justify-end items-end gap-14">
-                <Field className="w-full lg:max-w-192 h-fit flex-col flex justify-between items-center">
+                <div className="w-full lg:max-w-3xl h-fit flex-col flex justify-end items-end gap-14">
+                <Field className="w-full lg:max-w-3xl h-fit flex-col flex justify-between items-center">
                     <FieldLabel htmlFor="input-badge" className="font-heading">
                         Enter your long URL to get started.
                         {/* <Badge variant="outline" className="ml-auto text-black/50">Recently plumurl.com/abgh</Badge> */}
@@ -133,7 +124,6 @@ export default function HeroForm() {
                             <AlertDialogTrigger render={<Button variant="default">Shorten URL</Button>}/>
                             {shortenAliasAlert()}
                         </AlertDialog>
-                        {alias.alias_step}
                         <HeroYourURLs/>
 
                     </div>

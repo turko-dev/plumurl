@@ -4,12 +4,19 @@ import { Button } from './ui/button'
 import Logo from "./ui/logo"
 
 type Props = {
-    children?: React.ReactNode
+    children?: React.ReactNode,
+    bg?: 'none' | 'primary' | 'secondary'
 }
 
-export default function Page({children}: Props) {
+export default function Page({children, bg="none"}: Props) {
 
-    return <div className="w-full flex flex-col min-h-screen h-fit justify-baseline items-center">{
+    const bgVariants = {
+      none: "none",
+      primary: "bg-primary",
+      secondary: "bg-secondary"
+    }
+
+    return <div className={`${bgVariants[bg]} w-full flex flex-col min-h-screen h-fit justify-baseline items-center`}>{
         
     
     children ? 
