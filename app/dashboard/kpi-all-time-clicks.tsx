@@ -19,6 +19,12 @@ import {
 
 export const description = "An interactive line chart"
 
+type KPIAllTimeClicksConfig = {
+  date: Date,
+  allTimeClicks: number
+}
+
+
 
 
 const chartData = [
@@ -47,7 +53,7 @@ const chartConfig = {
   }
 } satisfies ChartConfig
 
-export function KPIAllTimeClicks({data}: {data: any}) {
+export function KPIAllTimeClicks({data}: {data: KPIAllTimeClicksConfig | null}) {
   const [activeChart, setActiveChart] =
     React.useState<keyof typeof chartConfig>("allTimeClicks")
 

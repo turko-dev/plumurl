@@ -8,10 +8,16 @@ import { timeout } from "@/lib/timeout-test";
 import { useEffect, useState } from "react";
 
 
-
 export default function Dashboard() {
 
-  
+
+  //Getting data for dashboard
+
+  //Fetch 1: All Time Clicks
+
+  //Get todays date.
+
+  //Create a KPIAllTimeClicks object and feed it into the first component
 
 
 
