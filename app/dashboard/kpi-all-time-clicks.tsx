@@ -1,4 +1,16 @@
 "use client"
+import { Calendar } from "@/components/ui/calendar"
+import { useIsMobile } from "@/hooks/use-mobile"
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
 
 import {
   ArchiveIcon,
@@ -59,6 +71,12 @@ const chartConfig = {
 //Function Export
 export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig[]}) {
 
+    const [customDateStart, setCustomDateStart] = React.useState<Date | undefined>(new Date())
+    const [customDateEnd, setCustomDateEnd] = React.useState<Date | undefined>(new Date())
+
+    const [open, setOpen] = React.useState(false)
+    const isMobile = useIsMobile()
+
     const date = {
         day: new Date().getDate().toString(),
         month: new Date().getMonth().toString(),
@@ -112,18 +130,51 @@ export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig
         <Button variant="outline">Quarterly</Button>
       </ButtonGroup>
       <ButtonGroup>
-        <Button variant="outline">Snooze</Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger render={<Button variant="outline" size="icon" aria-label="More Options"><MoreHorizontalIcon /></Button>} />
+
+        {/* Drawer */}
+         <Drawer
+      open={open}
+      onOpenChange={setOpen}
+      showSwipeHandle={isMobile}
+      swipeDirection={isMobile ? "down" : "right"}
+    >
+      <DrawerTrigger render={<Button variant="outline">Custom</Button>} />
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>Enter parameters</DrawerTitle>
+          <DrawerDescription>
+            Enter your start and end date to see all the data on this metric.
+          </DrawerDescription>
+        </DrawerHeader>
+        <div className="hidden sm:flex sm:flex-col flex-row w-full h-full justify-center gap-4 items-center scroll-fade overflow-y-auto p-4">
+            {/* Calendar Goes Here */}
+            <Calendar
+      mode="single"
+      selected={customDateStart}
+      onSelect={setCustomDateStart}
+      className="rounded-lg border"
+    />
+    <p className="font-sans text-neutral-600">Enter Start Date</p>
+        </div>
+        <DrawerFooter>
+          <Button className="h-[34px]">
+            Confirm Delivery Time
+          </Button>
+          <DrawerClose render={<Button variant="outline">Cancel</Button>} />
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+        {/* <DropdownMenu>
+          <DropdownMenuTrigger render={} />
           <DropdownMenuContent align="end" className="w-40">
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <MailCheckIcon />
-                Mark as Read
+                Start Date
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <ArchiveIcon />
-                Archive
+                End Date
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -171,7 +222,7 @@ export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
       </ButtonGroup>
     </ButtonGroup>
         
