@@ -1,8 +1,8 @@
 import DashboardMenu from "@/components/dashboard-menu";
 
-export default function DashboardURLs() {
+export default function DashboardQrCodes() {
     return(
-          <DashboardMenu route={"/dashboard/urls"}>
+          <DashboardMenu route={"/dashboard/qr-codes"}>
             <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                 <div className="aspect-video rounded-xl bg-muted/50" />
                 <div className="aspect-video rounded-xl bg-muted/50" />

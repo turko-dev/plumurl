@@ -1,5 +1,4 @@
 import DashboardMenu from "@/components/dashboard-menu";
-import Page from "@/components/page";
 
 export default function Dashboard() {
   return(
