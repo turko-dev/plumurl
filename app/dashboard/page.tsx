@@ -14,6 +14,8 @@ type DashboardDataConfig = {
   allTimeClicks: KPIAllTimeClicksConfig[]
 }
 
+
+
 export default function Dashboard() {
 
   const formatDate = (d: Date): string => {
@@ -24,14 +26,7 @@ export default function Dashboard() {
     }
 
 
-  //Getting data for dashboard
-
-  //Fetch 1: All Time Clicks
-
-  //Get todays date.
-
-  //Create a KPIAllTimeClicks object and feed it into the first component
-
+  // Function to create AllTimeClicks data for the past year (12 months + current month)
   const createAllTimeClicksData1Year = () => { //Creates AllTimeClicks Data for global dashboard data state
     const today = new Date()
     const data: KPIAllTimeClicksConfig[] = Array.from({ length: 13 }, (_, i) => {
@@ -45,8 +40,7 @@ export default function Dashboard() {
       return data
   }
 
-
-
+  //  Function to create AllTimeClicks data for quarterly intervals
   const createAllTimeClicksDataQuarterly = () => {
     const today = new Date();
     const data: KPIAllTimeClicksConfig[] = Array.from({ length: 13 }, (_, i) => {
@@ -60,48 +54,34 @@ export default function Dashboard() {
     return data;
   };
 
-  const createAllTimeClicksDataCustom = (
-  startDate: string,
-  endDate: string,
-  stepInMonths: number
-) => {
-  const parseDate = (dateString: string): Date => {
-    const [year, month, day] = dateString.split("-").map(Number);
-    return new Date(year, month - 1, day);
+
+  // Custom function to create AllTimeClicks data for a specific date range and step in months
+  const createAllTimeClicksDataCustom = (startDate: string, endDate: string, stepInMonths: number) => {
+    const parseDate = (dateString: string): Date => {
+      const [year, month, day] = dateString.split("-").map(Number);
+      return new Date(year, month - 1, day);
+    };
+
+    const start = parseDate(startDate);
+    const end = parseDate(endDate);
+
+    const data: KPIAllTimeClicksConfig[] = [];
+      let current = new Date( start.getFullYear(), start.getMonth(), start.getDate());
+      while (current <= end) {
+        data.push({
+          date: formatDate(current),
+          allTimeClicks: 0,
+      });
+      current = new Date(
+        current.getFullYear(),
+        current.getMonth() + stepInMonths,
+        current.getDate()
+      )}
+        return data;
   };
 
-  const start = parseDate(startDate);
-  const end = parseDate(endDate);
 
-  const data: KPIAllTimeClicksConfig[] = [];
-  let current = new Date(
-    start.getFullYear(),
-    start.getMonth(),
-    start.getDate()
-  );
-
-  while (current <= end) {
-    data.push({
-      date: formatDate(current),
-      allTimeClicks: 0,
-    });
-
-    current = new Date(
-      current.getFullYear(),
-      current.getMonth() + stepInMonths,
-      current.getDate()
-    );
-  }
-
-  return data;
-};
-
-  
-
-  const [dashboardData, setDashboardData] = useState<DashboardDataConfig>({
-    allTimeClicks: createAllTimeClicksDataCustom("2024-10-5", "2025-10-5", 2)
-  })
-
+  const [dashboardData, setDashboardData] = useState<DashboardDataConfig>({allTimeClicks: createAllTimeClicksDataCustom("2024-10-5", "2025-10-5", 2)})
 
   const getDashboardData = () => { //This function gets the dashboard data for the whole dashboard.
     console.log(dashboardData)
