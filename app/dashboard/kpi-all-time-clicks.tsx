@@ -1,45 +1,30 @@
 "use client"
 import { Calendar } from "@/components/ui/calendar"
 import { useIsMobile } from "@/hooks/use-mobile"
-
-  import { MinusIcon, PlusIcon } from "lucide-react"
-
-            
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer"
-
-import {
-  CircleQuestionMark,
-
-} from "lucide-react"
-
+import { MinusIcon, PlusIcon } from "lucide-react"
+import {Drawer,DrawerClose,DrawerContent,DrawerDescription,DrawerFooter,DrawerHeader,DrawerTitle,DrawerTrigger,} from "@/components/ui/drawer"
+import {CircleQuestionMark,} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ButtonGroup } from "@/components/ui/button-group"
-
 import * as React from "react"
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 import {Card,CardContent,CardDescription,CardHeader,CardTitle,} from "@/components/ui/card"
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/components/ui/chart"
+import {ChartContainer,ChartTooltip,ChartTooltipContent,type ChartConfig,} from "@/components/ui/chart"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+
+export const description = "A KPI card showing "
+
 type KPIAllTimeClicksConfig = {
   date: string,
   allTimeClicks: number
 }
-export const description = "A KPI card showing "
-
+type CustomCalendarConfig = {
+  startDate: Date | undefined,
+  endDate: Date | undefined,
+  stepInMonths: number,
+  msg: string,
+  calendarToggle: boolean
+}
 const chartConfig = {
   views: {
     label: "All Time Clicks",
@@ -50,18 +35,42 @@ const chartConfig = {
   }
 } satisfies ChartConfig
 
-
-type CustomCalendarConfig = {
-  startDate: Date | undefined,
-  endDate: Date | undefined,
-  stepInMonths: number,
-  msg: string,
-  calendarToggle: boolean
-}
-
-//Function Export
 export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig[]}) {
 
+
+
+  
+
+  const formatDate = (d: Date): string => {
+      const year = d.getFullYear()
+      const month = String(d.getMonth() + 1).toString()
+      const day = String(d.getDate().toString())
+      return `${year}-${month}-${day}`
+    }
+  // Custom function to create AllTimeClicks data for a specific date range and step in months
+  const createAllTimeClicksDataCustom = (startDate: string, endDate: string, stepInMonths: number) => {
+    const parseDate = (dateString: string): Date => {
+      const [year, month, day] = dateString.split("-").map(Number);
+      return new Date(year, month - 1, day);
+    };
+
+    const start = parseDate(startDate);
+    const end = parseDate(endDate);
+
+    const data: KPIAllTimeClicksConfig[] = [];
+      let current = new Date( start.getFullYear(), start.getMonth(), start.getDate());
+      while (current <= end) {
+        data.push({
+          date: formatDate(current),
+          allTimeClicks: 0,
+      });
+      current = new Date(
+        current.getFullYear(),
+        current.getMonth() + stepInMonths,
+        current.getDate()
+      )}
+        return data;
+  };
 
     const [customCalendar, setCustomCalendar] = React.useState<CustomCalendarConfig>({
       startDate: undefined,
