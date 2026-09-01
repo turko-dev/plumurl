@@ -1,6 +1,10 @@
 "use client"
 import { Calendar } from "@/components/ui/calendar"
 import { useIsMobile } from "@/hooks/use-mobile"
+
+  import { MinusIcon, PlusIcon } from "lucide-react"
+
+            
 import {
   Drawer,
   DrawerClose,
@@ -13,33 +17,12 @@ import {
 } from "@/components/ui/drawer"
 
 import {
-  ArchiveIcon,
-  ArrowLeftIcon,
-  CalendarPlusIcon,
   CircleQuestionMark,
-  ClockIcon,
-  ListFilterIcon,
-  MailCheckIcon,
-  MoreHorizontalIcon,
-  TagIcon,
-  Trash2Icon,
+
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { ButtonGroup, ButtonGroupSeparator } from "@/components/ui/button-group"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { ButtonGroup } from "@/components/ui/button-group"
 
 import * as React from "react"
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
@@ -68,11 +51,38 @@ const chartConfig = {
 } satisfies ChartConfig
 
 
+type CustomCalendarConfig = {
+  startDate: Date | undefined,
+  endDate: Date | undefined,
+  stepInMonths: number,
+  msg: string,
+  calendarToggle: boolean
+}
+
 //Function Export
 export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig[]}) {
 
-    const [customDateStart, setCustomDateStart] = React.useState<Date | undefined>(new Date())
-    const [customDateEnd, setCustomDateEnd] = React.useState<Date | undefined>(new Date())
+
+    const [customCalendar, setCustomCalendar] = React.useState<CustomCalendarConfig>({
+      startDate: undefined,
+      endDate: undefined,
+      stepInMonths: 1,
+      msg: "",
+      calendarToggle: false,
+      
+    })
+
+    const calendarProgress = () => {
+
+      if(customCalendar.calendarToggle == false) {
+        setCustomCalendar((prev) => ({...prev, calendarToggle: true}))
+      }
+      else {
+        setCustomCalendar((prev) => ({...prev, calendarToggle: false}))
+        setOpen(false)
+      }
+    }
+
 
     const [open, setOpen] = React.useState(false)
     const isMobile = useIsMobile()
@@ -123,13 +133,13 @@ export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig
             </div>
           </HoverCardContent>
         </HoverCard>
-        
-      </ButtonGroup>
-      <ButtonGroup>
-        <Button variant="outline">Past Year</Button>
-        <Button variant="outline">Quarterly</Button>
-      </ButtonGroup>
-      <ButtonGroup>
+            
+          </ButtonGroup>
+          <ButtonGroup>
+            <Button variant="outline">Past Year</Button>
+            <Button variant="outline">Quarterly</Button>
+          </ButtonGroup>
+          <ButtonGroup>
 
         {/* Drawer */}
          <Drawer
@@ -146,19 +156,44 @@ export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig
             Enter your start and end date to see all the data on this metric.
           </DrawerDescription>
         </DrawerHeader>
-        <div className="hidden sm:flex sm:flex-col flex-row w-full h-full justify-center gap-4 items-center scroll-fade overflow-y-auto p-4">
+        <div className="flex sm:flex-col flex-col w-full h-full justify-center gap-4 items-center scroll-fade overflow-y-auto p-4">
             {/* Calendar Goes Here */}
+            <p className="text-sm text-neutral-500 italic">{customCalendar.calendarToggle ? "Select an end date" : "Select a start date"}</p>
+            {customCalendar.calendarToggle == false ?  
             <Calendar
-      mode="single"
-      selected={customDateStart}
-      onSelect={setCustomDateStart}
-      className="rounded-lg border"
-    />
-    <p className="font-sans text-neutral-600">Enter Start Date</p>
+              showOutsideDays
+              mode="single"
+              selected={customCalendar.startDate}
+              onSelect={(date) => {
+              setCustomCalendar((prev) => ({...prev, startDate: date}))}}
+              className="rounded-lg min-h-75 border"
+            /> :  <Calendar
+              mode="single"
+              selected={customCalendar.endDate}
+              onSelect={(date) => {setCustomCalendar((prev) => ({...prev, endDate: date}))}}
+              className="rounded-lg min-h-75 border"
+            />}
         </div>
         <DrawerFooter>
-          <Button className="h-[34px]">
-            Confirm Delivery Time
+           <div className="flex w-full min-h-12 flex-row justify-between items-center gap-4">
+              <p><span className="text-sm text-neutral-500 italic">Step Duration:</span> {customCalendar.stepInMonths} month(s)</p>
+              <ButtonGroup
+                orientation="horizontal"
+                aria-label="Increment or decrement value"
+                className="h-fit"
+              >
+                <Button variant="outline" size="icon" onClick={()=> setCustomCalendar((prev) => ({...prev, stepInMonths: prev.stepInMonths + 1}))}>
+                  <PlusIcon />
+                </Button>
+                <Button variant="outline" size="icon" onClick={()=> {
+                  if(customCalendar.stepInMonths > 1) {setCustomCalendar((prev) => ({...prev, stepInMonths: prev.stepInMonths - 1}))}
+                }}>
+                  <MinusIcon />
+                </Button>
+              </ButtonGroup>
+            </div>
+          <Button className="h-8.5" onClick={()=> {calendarProgress()}}>
+            I've chosen my start date
           </Button>
           <DrawerClose render={<Button variant="outline">Cancel</Button>} />
         </DrawerFooter>
@@ -166,10 +201,6 @@ export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig
     </Drawer>
       </ButtonGroup>
     </ButtonGroup>
-        
-
-
-
             {["allTimeClicks"].map((key) => {
                 const chart = key as keyof typeof chartConfig
                 return (
@@ -244,4 +275,4 @@ export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig
         </CardContent>
         </Card>
     )
-    }
+}
