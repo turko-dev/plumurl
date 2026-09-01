@@ -113,7 +113,7 @@ export default function Dashboard() {
         :   
         <DashboardMenu route={"/dashboard"}>
 
-          <div><KPIAllTimeClicks chartData={dashboardData.allTimeClicks} /></div>
+          <div><KPIAllTimeClicks /></div>
 
         </DashboardMenu>}
       </>

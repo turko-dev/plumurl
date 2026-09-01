@@ -11,6 +11,7 @@ import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 import {Card,CardContent,CardDescription,CardHeader,CardTitle,} from "@/components/ui/card"
 import {ChartContainer,ChartTooltip,ChartTooltipContent,type ChartConfig,} from "@/components/ui/chart"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+import { useEffect } from "react"
 
 export const description = "A KPI card showing "
 
@@ -35,18 +36,43 @@ const chartConfig = {
   }
 } satisfies ChartConfig
 
-export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig[]}) {
-
-
-
-  
+export function KPIAllTimeClicks() {
 
   const formatDate = (d: Date): string => {
       const year = d.getFullYear()
       const month = String(d.getMonth() + 1).toString()
       const day = String(d.getDate().toString())
       return `${year}-${month}-${day}`
-    }
+  }
+
+  // Function to create AllTimeClicks data for the past year (12 months + current month)
+  const createAllTimeClicksData1Year = () => { //Creates AllTimeClicks Data for global dashboard data state
+    const today = new Date()
+    const data: KPIAllTimeClicksConfig[] = Array.from({ length: 13 }, (_, i) => {
+      const offset = 12 - i
+      const date = new Date(today.getFullYear(), today.getMonth() - offset, 1)
+      return {
+        date: formatDate(date),
+        allTimeClicks: 0
+      }
+    })
+      return data
+  }
+
+  //  Function to create AllTimeClicks data for quarterly intervals
+  const createAllTimeClicksDataQuarterly = () => {
+    const today = new Date();
+    const data: KPIAllTimeClicksConfig[] = Array.from({ length: 13 }, (_, i) => {
+      const offset = (4 - i) * 3;
+      const date = new Date(today.getFullYear(), today.getMonth() - offset, 1);
+      return {
+        date: formatDate(date),
+        allTimeClicks: 0,
+      };
+    });
+    return data;
+  };
+
   // Custom function to create AllTimeClicks data for a specific date range and step in months
   const createAllTimeClicksDataCustom = (startDate: string, endDate: string, stepInMonths: number) => {
     const parseDate = (dateString: string): Date => {
@@ -71,46 +97,44 @@ export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig
       )}
         return data;
   };
+  const [chartData, setChartData] = React.useState<KPIAllTimeClicksConfig[]>(createAllTimeClicksData1Year())
+  const [chartOption, setChartOption] = React.useState<"1Y" | "Quarterly" | "Custom">("1Y")
+  const [customCalendar, setCustomCalendar] = React.useState<CustomCalendarConfig>({
+    startDate: undefined,
+    endDate: undefined,
+    stepInMonths: 1,
+    msg: "",
+    calendarToggle: false,
+  })
+  const calendarProgress = () => {
+      if(customCalendar.calendarToggle == false) {setCustomCalendar((prev) => ({...prev, calendarToggle: true}))}
+      else {setCustomCalendar((prev) => ({...prev, calendarToggle: false})); setOpen(false)}
+  }
+  const [open, setOpen] = React.useState(false)
+  const isMobile = useIsMobile()
 
-    const [customCalendar, setCustomCalendar] = React.useState<CustomCalendarConfig>({
-      startDate: undefined,
-      endDate: undefined,
-      stepInMonths: 1,
-      msg: "",
-      calendarToggle: false,
-      
-    })
+  const [openValueStage, setOpenValueStage] = React.useState<"initial" | "final">("initial")
+  useEffect(()=> {
+    //Record open value in 2 step stage (this is for chart option number 3's use case behaviours)
+    if(open == true) setOpenValueStage("final")
+    if(openValueStage == "final" && open == false) setOpenValueStage("initial")
+    if(customCalendar.startDate && customCalendar.endDate) {setChartOption("Custom")}
+    else setChartOption("1Y")
+  }, [open])
 
-    const calendarProgress = () => {
+  const date = {
+    day: new Date().getDate().toString(),
+    month: new Date().getMonth().toString(),
+    year: new Date().getFullYear().toString()
+  }
 
-      if(customCalendar.calendarToggle == false) {
-        setCustomCalendar((prev) => ({...prev, calendarToggle: true}))
-      }
-      else {
-        setCustomCalendar((prev) => ({...prev, calendarToggle: false}))
-        setOpen(false)
-      }
-    }
-
-
-    const [open, setOpen] = React.useState(false)
-    const isMobile = useIsMobile()
-
-    const date = {
-        day: new Date().getDate().toString(),
-        month: new Date().getMonth().toString(),
-        year: new Date().getFullYear().toString()
-    }
-
-    //ActiveChart State
-    const [activeChart, setActiveChart] = React.useState<keyof typeof chartConfig>("allTimeClicks")
+  //ActiveChart State
+  const [activeChart, setActiveChart] = React.useState<keyof typeof chartConfig>("allTimeClicks")
     
-    const [label, setLabel] = React.useState("personal")
-    
+  const [label, setLabel] = React.useState("personal")
 
-
-    //Total Reduction of allTimeClicks data
-    const total = React.useMemo(() => ({ allTimeClicks: chartData.reduce((acc, curr) => acc + curr.allTimeClicks, 0),}),[])
+  //Total Reduction of allTimeClicks data
+  const total = React.useMemo(() => ({ allTimeClicks: chartData.reduce((acc, curr) => acc + curr.allTimeClicks, 0),}),[])
 
 
     return (
@@ -119,7 +143,9 @@ export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig
             <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
             <CardTitle>Raw All Clicks Data</CardTitle>
             <CardDescription>
-                Showing total visitors for the past year
+                {chartOption === "1Y" && "All time clicks data for the past year."}
+                {chartOption === "Quarterly" && "All time clicks data for the past quarter."}
+                {chartOption === "Custom" && "All time clicks data for the custom date range."}
             </CardDescription>
             </div>
 
@@ -145,8 +171,8 @@ export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig
             
           </ButtonGroup>
           <ButtonGroup>
-            <Button variant="outline">Past Year</Button>
-            <Button variant="outline">Quarterly</Button>
+            <Button variant="outline" onClick={()=> {setChartData(createAllTimeClicksData1Year()); setChartOption("1Y")}}>Past Year</Button>
+            <Button variant="outline" onClick={()=> {setChartData(createAllTimeClicksDataQuarterly()); setChartOption("Quarterly")}}>Quarterly</Button>
           </ButtonGroup>
           <ButtonGroup>
 
@@ -154,10 +180,11 @@ export function KPIAllTimeClicks({chartData}: {chartData: KPIAllTimeClicksConfig
          <Drawer
       open={open}
       onOpenChange={setOpen}
+      
       showSwipeHandle={isMobile}
       swipeDirection={isMobile ? "down" : "right"}
     >
-      <DrawerTrigger render={<Button variant="outline">Custom</Button>} />
+      <DrawerTrigger render={<Button variant="outline" onClick={()=> {setChartOption("Custom")}}>Custom</Button>} />
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Enter parameters</DrawerTitle>
