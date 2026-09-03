@@ -6,6 +6,7 @@ import DashboardMenu from "@/components/dashboard-menu";
 import { KPIAllTimeClicks } from "./kpi-all-time-clicks";
 import { timeout } from "@/lib/timeout-test";
 import { useEffect, useState } from "react";
+import KPIClicksToday from "./kpi-clicks-today";
 type KPIAllTimeClicksConfig = {
   date: string,
   allTimeClicks: number
@@ -13,6 +14,13 @@ type KPIAllTimeClicksConfig = {
 type DashboardDataConfig = {
   allTimeClicks: KPIAllTimeClicksConfig[]
 }
+type KPIClicksTodayConfig = {
+    time: string,
+    clicks: number
+}
+
+
+
 
 
 
@@ -81,7 +89,7 @@ export default function Dashboard() {
   };
 
 
-  const [dashboardData, setDashboardData] = useState<DashboardDataConfig>({allTimeClicks: createAllTimeClicksDataCustom("2024-10-5", "2025-10-5", 2)})
+  const [dashboardData, setDashboardData] = useState<DashboardDataConfig>()
 
   const getDashboardData = () => { //This function gets the dashboard data for the whole dashboard.
     console.log(dashboardData)
@@ -114,7 +122,18 @@ export default function Dashboard() {
         <DashboardMenu route={"/dashboard"}>
 
           <div><KPIAllTimeClicks /></div>
+          <div className="grid grid-cols-3 gap-4 md:grid-cols-6">
+            {/* <KPIClicksToday /> */}
 
+            <DashboardCardSkeleton />
+            <DashboardCardSkeleton />
+            <DashboardCardSkeleton />
+            <DashboardCardSkeleton />
+            <DashboardCardSkeleton />
+            <DashboardCardSkeleton />
+
+          </div>
+          
         </DashboardMenu>}
       </>
   )

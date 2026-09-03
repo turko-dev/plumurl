@@ -15,10 +15,7 @@ import { useEffect } from "react"
 
 export const description = "A KPI card showing "
 
-type KPIAllTimeClicksConfig = {
-  date: string,
-  allTimeClicks: number
-}
+type KPIAllTimeClicksConfig = { date: string, allTimeClicks: number }
 type CustomCalendarConfig = {
   startDate: Date | undefined,
   endDate: Date | undefined,
@@ -36,8 +33,10 @@ const chartConfig = {
   }
 } satisfies ChartConfig
 
+
 export function KPIAllTimeClicks() {
 
+  //Date Format Helper Function
   const formatDate = (d: Date): string => {
       const year = d.getFullYear()
       const month = String(d.getMonth() + 1).toString()
@@ -74,14 +73,18 @@ export function KPIAllTimeClicks() {
   };
 
   // Custom function to create AllTimeClicks data for a specific date range and step in months
-  const createAllTimeClicksDataCustom = (startDate: string, endDate: string, stepInMonths: number) => {
+  const createAllTimeClicksDataCustom = (startDate: Date, endDate: Date, stepInMonths: number) => {
+
+    let sDate = formatDate(startDate)
+    let eDate = formatDate(endDate)
+
     const parseDate = (dateString: string): Date => {
       const [year, month, day] = dateString.split("-").map(Number);
       return new Date(year, month - 1, day);
     };
 
-    const start = parseDate(startDate);
-    const end = parseDate(endDate);
+    const start = parseDate(sDate);
+    const end = parseDate(eDate);
 
     const data: KPIAllTimeClicksConfig[] = [];
       let current = new Date( start.getFullYear(), start.getMonth(), start.getDate());
@@ -108,7 +111,13 @@ export function KPIAllTimeClicks() {
   })
   const calendarProgress = () => {
       if(customCalendar.calendarToggle == false) {setCustomCalendar((prev) => ({...prev, calendarToggle: true}))}
-      else {setCustomCalendar((prev) => ({...prev, calendarToggle: false})); setOpen(false)}
+      else {setCustomCalendar((prev) => ({...prev, calendarToggle: false})); 
+        setOpen(false)
+        if(customCalendar.startDate !== undefined && customCalendar.endDate !== undefined) {
+          setChartData(createAllTimeClicksDataCustom(customCalendar.startDate, customCalendar.endDate, customCalendar.stepInMonths))
+        }
+      }
+
   }
   const [open, setOpen] = React.useState(false)
   const isMobile = useIsMobile()
@@ -121,12 +130,6 @@ export function KPIAllTimeClicks() {
     if(customCalendar.startDate && customCalendar.endDate) {setChartOption("Custom")}
     else setChartOption("1Y")
   }, [open])
-
-  const date = {
-    day: new Date().getDate().toString(),
-    month: new Date().getMonth().toString(),
-    year: new Date().getFullYear().toString()
-  }
 
   //ActiveChart State
   const [activeChart, setActiveChart] = React.useState<keyof typeof chartConfig>("allTimeClicks")
@@ -229,7 +232,7 @@ export function KPIAllTimeClicks() {
               </ButtonGroup>
             </div>
           <Button className="h-8.5" onClick={()=> {calendarProgress()}}>
-            I've chosen my start date
+            {customCalendar.calendarToggle ? "I've chosen my end date": "I've chosen my start date"}
           </Button>
           <DrawerClose render={<Button variant="outline">Cancel</Button>} />
         </DrawerFooter>
