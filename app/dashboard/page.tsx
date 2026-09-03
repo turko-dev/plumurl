@@ -4,19 +4,25 @@ import { DashboardCardSkeleton } from "@/components/dashboard-card-skeleton";
 import { DashboardCardSkeletonAlt } from "@/components/dashboard-card-skeleton-alt";
 import DashboardMenu from "@/components/dashboard-menu";
 import { KPIAllTimeClicks } from "./kpi-all-time-clicks";
-import { timeout } from "@/lib/timeout-test";
 import { useEffect, useState } from "react";
 import KPIClicksToday from "./kpi-clicks-today";
-type KPIAllTimeClicksConfig = {
-  date: string,
-  allTimeClicks: number
+import { DashboardLargeSkeleton } from "@/components/dashboard-large-skeleton";
+
+
+type _ClicksToday = {
+  clicks: number
 }
+
+type _AllTimeClicks = {
+  date: string, 
+  clicks: number
+}
+
+
+
 type DashboardDataConfig = {
-  allTimeClicks: KPIAllTimeClicksConfig[]
-}
-type KPIClicksTodayConfig = {
-    time: string,
-    clicks: number
+  clicksToday: _ClicksToday[],
+  allTimeClicks: _AllTimeClicks[]
 }
 
 
@@ -25,94 +31,54 @@ type KPIClicksTodayConfig = {
 
 
 export default function Dashboard() {
-
+//Date Format Helper Function
   const formatDate = (d: Date): string => {
       const year = d.getFullYear()
       const month = String(d.getMonth() + 1).toString()
       const day = String(d.getDate().toString())
       return `${year}-${month}-${day}`
-    }
-
-
-  // Function to create AllTimeClicks data for the past year (12 months + current month)
-  const createAllTimeClicksData1Year = () => { //Creates AllTimeClicks Data for global dashboard data state
-    const today = new Date()
-    const data: KPIAllTimeClicksConfig[] = Array.from({ length: 13 }, (_, i) => {
-      const offset = 12 - i
-      const date = new Date(today.getFullYear(), today.getMonth() - offset, 1)
-      return {
-        date: formatDate(date),
-        allTimeClicks: 0
-      }
-    })
-      return data
   }
 
-  //  Function to create AllTimeClicks data for quarterly intervals
-  const createAllTimeClicksDataQuarterly = () => {
-    const today = new Date();
-    const data: KPIAllTimeClicksConfig[] = Array.from({ length: 13 }, (_, i) => {
-      const offset = (4 - i) * 3;
-      const date = new Date(today.getFullYear(), today.getMonth() - offset, 1);
-      return {
-        date: formatDate(date),
-        allTimeClicks: 0,
-      };
-    });
-    return data;
-  };
-
-
-  // Custom function to create AllTimeClicks data for a specific date range and step in months
-  const createAllTimeClicksDataCustom = (startDate: string, endDate: string, stepInMonths: number) => {
-    const parseDate = (dateString: string): Date => {
-      const [year, month, day] = dateString.split("-").map(Number);
-      return new Date(year, month - 1, day);
-    };
-
-    const start = parseDate(startDate);
-    const end = parseDate(endDate);
-
-    const data: KPIAllTimeClicksConfig[] = [];
-      let current = new Date( start.getFullYear(), start.getMonth(), start.getDate());
-      while (current <= end) {
-        data.push({
-          date: formatDate(current),
-          allTimeClicks: 0,
-      });
-      current = new Date(
-        current.getFullYear(),
-        current.getMonth() + stepInMonths,
-        current.getDate()
-      )}
-        return data;
-  };
-
-
-  const [dashboardData, setDashboardData] = useState<DashboardDataConfig>()
+  const [dashboardData, setDashboardData] = useState<DashboardDataConfig | null>(null)
 
   const getDashboardData = () => { //This function gets the dashboard data for the whole dashboard.
-    console.log(dashboardData)
+    // setDashboardData({
+    //   clicksToday: [10, 20, 231, 412, 120, 214]
+    // })
+
+    let temp = {
+      clicksToday: [
+        {clicks: 10},
+        {clicks: 101},
+        {clicks: 140},
+        {clicks: 101},
+        {clicks: 150},
+        {clicks: 103},
+      ],
+      allTimeClicks: [
+        {date: "2025-01-09", clicks: 10},
+        {date: "2025-01-10", clicks: 110},
+        {date: "2025-01-11", clicks: 105},
+        {date: "2025-01-12", clicks: 1110},
+        {date: "2026-01-01", clicks: 10113},
+      ]
+    }
+    setDashboardData(temp)
+
+  }
+  const valid = () => {
+    return dashboardData?.clicksToday === undefined || dashboardData?.clicksToday === null
   }
 
-
-
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(()=> {
     // This is a hook made for testing purposes
-    const toggleLoading = async () => {
-      await timeout(400).then(()=> {
-        setLoading(false)
-      })
-    }
-    toggleLoading()
     getDashboardData()
-
   }, [])
 
   return(
       <>
-        {loading ? // Skeleton Start (true when still loading, false when content is ready)
+        {loading  ? // Skeleton Start (true when still loading, false when content is ready)
         <DashboardMenu route={"/dashboard"}>
           <div className="grid grid-cols-3 gap-4 md:grid-cols-6"><DashboardCardSkeleton /><DashboardCardSkeleton /><DashboardCardSkeleton /><DashboardCardSkeleton /><DashboardCardSkeleton /><DashboardCardSkeleton /></div>
           <div className="grid auto-rows-min gap-4 h-full md:grid-cols-2"><DashboardCardSkeleton /><div className="flex flex-row md:flex-row h-full gap-4"><DashboardCardSkeletonAlt /><DashboardCardSkeletonAlt /></div></div>
@@ -120,17 +86,13 @@ export default function Dashboard() {
         </DashboardMenu> //Skeleton End
         :   
         <DashboardMenu route={"/dashboard"}>
+          
 
-          <div><KPIAllTimeClicks /></div>
+          {valid() ? <DashboardLargeSkeleton/> : <div><KPIAllTimeClicks /></div>}
+          <div></div>
           <div className="grid grid-cols-3 gap-4 md:grid-cols-6">
-            {/* <KPIClicksToday /> */}
-
-            <DashboardCardSkeleton />
-            <DashboardCardSkeleton />
-            <DashboardCardSkeleton />
-            <DashboardCardSkeleton />
-            <DashboardCardSkeleton />
-            <DashboardCardSkeleton />
+          
+            {valid() ? <DashboardCardSkeleton /> : <KPIClicksToday inputData={dashboardData?.clicksToday} />}
 
           </div>
           

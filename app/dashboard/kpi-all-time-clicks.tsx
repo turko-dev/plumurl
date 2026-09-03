@@ -52,7 +52,7 @@ export function KPIAllTimeClicks() {
       const date = new Date(today.getFullYear(), today.getMonth() - offset, 1)
       return {
         date: formatDate(date),
-        allTimeClicks: 0
+        allTimeClicks: 10
       }
     })
       return data
@@ -114,6 +114,7 @@ export function KPIAllTimeClicks() {
       else {setCustomCalendar((prev) => ({...prev, calendarToggle: false})); 
         setOpen(false)
         if(customCalendar.startDate !== undefined && customCalendar.endDate !== undefined) {
+          // pass
           setChartData(createAllTimeClicksDataCustom(customCalendar.startDate, customCalendar.endDate, customCalendar.stepInMonths))
         }
       }
