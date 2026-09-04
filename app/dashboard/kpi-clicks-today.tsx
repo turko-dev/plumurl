@@ -33,21 +33,19 @@ type _ClicksToday = {
 }
 
 export default function KPIClicksToday({inputData}: {inputData: _ClicksToday[] | null | undefined}) {
- 
- if(inputData !== null && inputData !== undefined) {
-   console.log(inputData)
-   const createTotalLinksData = () => {
-   const now = new Date();
-   return Array.from({ length: 6 }, (_, index) => {
-     const d = new Date(now);
-     d.setHours(now.getHours() - (5 - index));
-     return {
-       time: d.getHours().toString().padStart(2, "0"),
-       clicks: inputData[index].clicks,
-     };
-   });
- };
- const chartData = createTotalLinksData()
+  if(inputData !== null && inputData !== undefined) {
+      const createTotalLinksData = () => {
+      const now = new Date();
+      return Array.from({ length: 6 }, (_, index) => {
+        const d = new Date(now);
+        d.setHours(now.getHours() - (5 - index));
+        return {
+          time: `${d.getHours().toString()}:00`,
+          clicks: inputData[index].clicks,
+        };
+      });
+    };
+    const chartData = createTotalLinksData()
  
     return (
      <Card>
@@ -71,7 +69,7 @@ export default function KPIClicksToday({inputData}: {inputData: _ClicksToday[] |
                tickLine={true}
                axisLine={true}
                tickMargin={8}
-               tickFormatter={(value) => value.slice(0, 2)}
+               tickFormatter={(value) => value.slice(0, 5)}
              />
              <ChartTooltip
                cursor={false}

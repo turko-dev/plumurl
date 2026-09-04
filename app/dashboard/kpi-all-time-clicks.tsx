@@ -24,17 +24,31 @@ type CustomCalendarConfig = {
   calendarToggle: boolean
 }
 const chartConfig = {
-  views: {
-    label: "All Time Clicks",
-  },
+  
   allTimeClicks: {
-    label: "All Time Clicks",
+    label: "Total Clicks",
     color: "var(--chart-1)",
   }
 } satisfies ChartConfig
+type _AllTimeClicks = {
+  date: string, 
+  clicks: number
+}
 
 
-export function KPIAllTimeClicks() {
+export function KPIAllTimeClicks({inputData}: {inputData: _AllTimeClicks[] | null | undefined}) {
+  if(inputData !== null && inputData !== undefined) {
+
+  }
+
+  const firstChar = (s: string) => {
+    if(s[0] === "0") {
+      return(s.slice(1))
+    }
+    else {
+      return s
+    }
+  }
 
   //Date Format Helper Function
   const formatDate = (d: Date): string => {
@@ -43,34 +57,79 @@ export function KPIAllTimeClicks() {
       const day = String(d.getDate().toString())
       return `${year}-${month}-${day}`
   }
-
+  
   // Function to create AllTimeClicks data for the past year (12 months + current month)
   const createAllTimeClicksData1Year = () => { //Creates AllTimeClicks Data for global dashboard data state
     const today = new Date()
+
+    
     const data: KPIAllTimeClicksConfig[] = Array.from({ length: 13 }, (_, i) => {
       const offset = 12 - i
+      let tempClicks = 0
       const date = new Date(today.getFullYear(), today.getMonth() - offset, 1)
+      inputData?.filter(f => {
+        if(firstChar(f.date.slice(8,10)) === (date.getMonth() + 1).toString()
+        && f.date.slice(0, 4) === (date.getFullYear().toString())
+        ) {
+          tempClicks = f.clicks
+        }
+
+      })
+      
       return {
         date: formatDate(date),
-        allTimeClicks: 10
+        allTimeClicks: tempClicks
       }
     })
       return data
   }
 
   //  Function to create AllTimeClicks data for quarterly intervals
-  const createAllTimeClicksDataQuarterly = () => {
-    const today = new Date();
-    const data: KPIAllTimeClicksConfig[] = Array.from({ length: 13 }, (_, i) => {
-      const offset = (4 - i) * 3;
-      const date = new Date(today.getFullYear(), today.getMonth() - offset, 1);
-      return {
-        date: formatDate(date),
-        allTimeClicks: 0,
-      };
-    });
-    return data;
-  };
+const createAllTimeClicksDataQuarterly = (): KPIAllTimeClicksConfig[] => {
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const startYear = currentYear - 4;
+
+  const quarterStarts: Date[] = [];
+
+  for (let year = startYear; year <= currentYear; year++) {
+    for (let quarterMonth = 0; quarterMonth < 12; quarterMonth += 3) {
+      const quarterStart = new Date(year, quarterMonth, 1);
+
+      if (quarterStart <= today) {
+        quarterStarts.push(quarterStart);
+      }
+    }
+  }
+
+  const data: KPIAllTimeClicksConfig[] = quarterStarts.map((quarterStart) => {
+    const quarterEnd = new Date(
+      quarterStart.getFullYear(),
+      quarterStart.getMonth() + 3,
+      0
+    );
+
+    const allTimeClicks =
+      inputData?.reduce((sum, item) => {
+        const itemYear = Number(item.date.slice(0, 4));
+        const itemDay = Number(item.date.slice(5, 7));
+        const itemMonth = Number(item.date.slice(8, 10));
+
+        const itemDate = new Date(itemYear, itemMonth - 1, itemDay);
+
+        return itemDate >= quarterStart && itemDate <= quarterEnd
+          ? sum + item.clicks
+          : sum;
+      }, 0) ?? 0;
+
+    return {
+      date: formatDate(quarterEnd),
+      allTimeClicks: allTimeClicks,
+    };
+  });
+
+  return data;
+};
 
   // Custom function to create AllTimeClicks data for a specific date range and step in months
   const createAllTimeClicksDataCustom = (startDate: Date, endDate: Date, stepInMonths: number) => {
@@ -138,7 +197,9 @@ export function KPIAllTimeClicks() {
   const [label, setLabel] = React.useState("personal")
 
   //Total Reduction of allTimeClicks data
-  const total = React.useMemo(() => ({ allTimeClicks: chartData.reduce((acc, curr) => acc + curr.allTimeClicks, 0),}),[])
+
+
+  const total = inputData?.reduce((acc, curr) => acc + curr.clicks, 0);
 
 
     return (
@@ -250,11 +311,11 @@ export function KPIAllTimeClicks() {
                     className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
                     onClick={() => setActiveChart(chart)}
                 >
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs font-mono text-muted-foreground">
                     {chartConfig[chart].label}
                     </span>
-                    <span className="text-lg leading-none font-bold sm:text-3xl">
-                    {total[key as keyof typeof total].toLocaleString()}
+                    <span className="text-lg leading-none font-heading font-bold sm:text-3xl">
+                    {total ?? 0}
                     </span>
                 </button>
                 )
@@ -292,7 +353,7 @@ export function KPIAllTimeClicks() {
                 content={
                     <ChartTooltipContent
                     className="w-[150px]"
-                    nameKey="views"
+                    nameKey="allTimeClicks"
                     labelFormatter={(value) => {
                         return new Date(value).toLocaleDateString("en-US", {
                         month: "short",

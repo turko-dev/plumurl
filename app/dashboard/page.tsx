@@ -19,16 +19,10 @@ type _AllTimeClicks = {
 }
 
 
-
 type DashboardDataConfig = {
   clicksToday: _ClicksToday[],
   allTimeClicks: _AllTimeClicks[]
 }
-
-
-
-
-
 
 export default function Dashboard() {
 //Date Format Helper Function
@@ -46,6 +40,9 @@ export default function Dashboard() {
     //   clicksToday: [10, 20, 231, 412, 120, 214]
     // })
 
+
+        //ALL ANALYTICAL DATA NEEDS TO BE COMPILED TO MONTHS BEFORE PUTTING INTO DASHBOARD DATA
+
     let temp = {
       clicksToday: [
         {clicks: 10},
@@ -56,11 +53,17 @@ export default function Dashboard() {
         {clicks: 103},
       ],
       allTimeClicks: [
-        {date: "2025-01-09", clicks: 10},
-        {date: "2025-01-10", clicks: 110},
-        {date: "2025-01-11", clicks: 105},
-        {date: "2025-01-12", clicks: 1110},
-        {date: "2026-01-01", clicks: 10113},
+        {date: "2025-01-05", clicks: 100},
+        {date: "2025-01-06", clicks: 1000},
+        {date: "2025-01-07", clicks: 1500},
+        {date: "2025-01-08", clicks: 1200},
+
+
+        {date: "2026-01-05", clicks: 10},
+        {date: "2026-01-06", clicks: 110},
+        {date: "2026-01-07", clicks: 105},
+        {date: "2026-01-08", clicks: 1110},
+        {date: "2026-01-09", clicks: 10113},
       ]
     }
     setDashboardData(temp)
@@ -88,9 +91,9 @@ export default function Dashboard() {
         <DashboardMenu route={"/dashboard"}>
           
 
-          {valid() ? <DashboardLargeSkeleton/> : <div><KPIAllTimeClicks /></div>}
+          {valid() ? <DashboardLargeSkeleton/> : <div><KPIAllTimeClicks inputData={dashboardData?.allTimeClicks} /></div>}
           <div></div>
-          <div className="grid grid-cols-3 gap-4 md:grid-cols-6">
+          <div className="grid grid-cols-3 gap-4 md:grid-cols-4">
           
             {valid() ? <DashboardCardSkeleton /> : <KPIClicksToday inputData={dashboardData?.clicksToday} />}
 
