@@ -57,8 +57,6 @@ export default function Dashboard() {
         {date: "2025-01-06", clicks: 1000},
         {date: "2025-01-07", clicks: 1500},
         {date: "2025-01-08", clicks: 1200},
-
-
         {date: "2026-01-05", clicks: 10},
         {date: "2026-01-06", clicks: 110},
         {date: "2026-01-07", clicks: 105},
