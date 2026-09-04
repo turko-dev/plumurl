@@ -48,7 +48,7 @@ export default function KPIClicksToday({inputData}: {inputData: _ClicksToday[] |
     const chartData = createTotalLinksData()
  
     return (
-     <Card>
+     <Card className="flex-col justify-between">
        <CardHeader>
          <CardTitle>Clicks Today</CardTitle>
          <CardDescription></CardDescription>

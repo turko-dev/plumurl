@@ -7,6 +7,8 @@ import { KPIAllTimeClicks } from "./kpi-all-time-clicks";
 import { useEffect, useState } from "react";
 import KPIClicksToday from "./kpi-clicks-today";
 import { DashboardLargeSkeleton } from "@/components/dashboard-large-skeleton";
+import { KPIGeography } from "./kpi-geography";
+import { KPIBrowser } from "./kpi-browser";
 
 
 type _ClicksToday = {
@@ -91,8 +93,10 @@ export default function Dashboard() {
 
           {valid() ? <DashboardLargeSkeleton/> : <div><KPIAllTimeClicks inputData={dashboardData?.allTimeClicks} /></div>}
           <div></div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
             {valid() ? <DashboardCardSkeleton /> : <KPIClicksToday inputData={dashboardData?.clicksToday} />}
+            {valid() ? <DashboardCardSkeleton /> : <KPIGeography />}
+            {valid() ? <DashboardCardSkeleton /> : <KPIBrowser />}
           </div>
           
         </DashboardMenu>}
