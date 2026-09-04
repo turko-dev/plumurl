@@ -1,7 +1,7 @@
 "use client"
 import { Calendar } from "@/components/ui/calendar"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { MinusIcon, PlusIcon } from "lucide-react"
+import { ArrowUpIcon, MinusIcon, PlusIcon } from "lucide-react"
 import {Drawer,DrawerClose,DrawerContent,DrawerDescription,DrawerFooter,DrawerHeader,DrawerTitle,DrawerTrigger,} from "@/components/ui/drawer"
 import {CircleQuestionMark,} from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -19,7 +19,7 @@ type KPIAllTimeClicksConfig = { date: string, allTimeClicks: number }
 type CustomCalendarConfig = {
   startDate: Date | undefined,
   endDate: Date | undefined,
-  stepInMonths: number,
+  stepInWeeks: number,
   msg: string,
   calendarToggle: boolean
 }
@@ -39,7 +39,6 @@ type _AllTimeClicks = {
 export function KPIAllTimeClicks({inputData}: {inputData: _AllTimeClicks[] | null | undefined}) {
   if(inputData !== null && inputData !== undefined) {
 
-  }
 
   const firstChar = (s: string) => {
     if(s[0] === "0") {
@@ -131,40 +130,71 @@ const createAllTimeClicksDataQuarterly = (): KPIAllTimeClicksConfig[] => {
   return data;
 };
 
-  // Custom function to create AllTimeClicks data for a specific date range and step in months
-  const createAllTimeClicksDataCustom = (startDate: Date, endDate: Date, stepInMonths: number) => {
+const createAllTimeClicksDataCustom = (
+  startDate: Date,
+  endDate: Date,
+  stepInWeeks: number
+): KPIAllTimeClicksConfig[] => {
+  const data: KPIAllTimeClicksConfig[] = [];
 
-    let sDate = formatDate(startDate)
-    let eDate = formatDate(endDate)
+  let current = new Date(
+    startDate.getFullYear(),
+    startDate.getMonth(),
+    startDate.getDate()
+  );
 
-    const parseDate = (dateString: string): Date => {
-      const [year, month, day] = dateString.split("-").map(Number);
-      return new Date(year, month - 1, day);
-    };
+  const end = new Date(
+    endDate.getFullYear(),
+    endDate.getMonth(),
+    endDate.getDate()
+  );
 
-    const start = parseDate(sDate);
-    const end = parseDate(eDate);
+  while (current <= end) {
+    const periodStart = new Date(
+      current.getFullYear(),
+      current.getMonth(),
+      current.getDate()
+    );
 
-    const data: KPIAllTimeClicksConfig[] = [];
-      let current = new Date( start.getFullYear(), start.getMonth(), start.getDate());
-      while (current <= end) {
-        data.push({
-          date: formatDate(current),
-          allTimeClicks: 0,
-      });
-      current = new Date(
-        current.getFullYear(),
-        current.getMonth() + stepInMonths,
-        current.getDate()
-      )}
-        return data;
-  };
+    const periodEnd = new Date(
+      current.getFullYear(),
+      current.getMonth(),
+      current.getDate() + stepInWeeks * 7 - 1
+    );
+
+    const allTimeClicks =
+      inputData?.reduce((sum, item) => {
+        const itemYear = Number(item.date.slice(0, 4));
+        const itemDay = Number(item.date.slice(5, 7));
+        const itemMonth = Number(item.date.slice(8, 10));
+
+        const itemDate = new Date(itemYear, itemMonth - 1, itemDay);
+
+        return itemDate >= periodStart && itemDate <= periodEnd
+          ? sum + item.clicks
+          : sum;
+      }, 0) ?? 0;
+
+    data.push({
+      date: formatDate(periodStart),
+      allTimeClicks,
+    });
+
+    current = new Date(
+      current.getFullYear(),
+      current.getMonth(),
+      current.getDate() + stepInWeeks * 7
+    );
+  }
+
+  return data;
+};
   const [chartData, setChartData] = React.useState<KPIAllTimeClicksConfig[]>(createAllTimeClicksData1Year())
   const [chartOption, setChartOption] = React.useState<"1Y" | "Quarterly" | "Custom">("1Y")
   const [customCalendar, setCustomCalendar] = React.useState<CustomCalendarConfig>({
     startDate: undefined,
     endDate: undefined,
-    stepInMonths: 1,
+    stepInWeeks: 1,
     msg: "",
     calendarToggle: false,
   })
@@ -174,7 +204,7 @@ const createAllTimeClicksDataQuarterly = (): KPIAllTimeClicksConfig[] => {
         setOpen(false)
         if(customCalendar.startDate !== undefined && customCalendar.endDate !== undefined) {
           // pass
-          setChartData(createAllTimeClicksDataCustom(customCalendar.startDate, customCalendar.endDate, customCalendar.stepInMonths))
+          setChartData(createAllTimeClicksDataCustom(customCalendar.startDate, customCalendar.endDate, customCalendar.stepInWeeks))
         }
       }
 
@@ -209,14 +239,10 @@ const createAllTimeClicksDataQuarterly = (): KPIAllTimeClicksConfig[] => {
             <CardTitle>Raw All Clicks Data</CardTitle>
             <CardDescription>
                 {chartOption === "1Y" && "All time clicks data for the past year."}
-                {chartOption === "Quarterly" && "All time clicks data for the past quarter."}
+                {chartOption === "Quarterly" && "All time clicks (quarterly) for the past 5 years."}
                 {chartOption === "Custom" && "All time clicks data for the custom date range."}
             </CardDescription>
             </div>
-
-            
-
-            
             <div className="flex flex-col sm:flex-row gap-4 sm:justify-center justify-baseline items-stretch">
 <ButtonGroup className="p-4 max-sm:w-full sm:justify-center items-center justify-between">
       <ButtonGroup className="hidden sm:flex">
@@ -276,18 +302,32 @@ const createAllTimeClicksDataQuarterly = (): KPIAllTimeClicksConfig[] => {
             />}
         </div>
         <DrawerFooter>
+        <div className="w-full h-fit flex flex-row justify-end items-center">
+        <Button onClick={()=> {
+          setCustomCalendar({
+    startDate: undefined,
+    endDate: undefined,
+    stepInWeeks: 1,
+    msg: "",
+    calendarToggle: false,
+  })
+        }} variant="outline" aria-label="Submit">
+            Reset
+        </Button>
+
+        </div>
            <div className="flex w-full min-h-12 flex-row justify-between items-center gap-4">
-              <p><span className="text-sm text-neutral-500 italic">Step Duration:</span> {customCalendar.stepInMonths} month(s)</p>
+              <p><span className="text-sm text-neutral-500 italic">Step Duration:</span> {customCalendar.stepInWeeks} weeks(s)</p>
               <ButtonGroup
                 orientation="horizontal"
                 aria-label="Increment or decrement value"
                 className="h-fit"
               >
-                <Button variant="outline" size="icon" onClick={()=> setCustomCalendar((prev) => ({...prev, stepInMonths: prev.stepInMonths + 1}))}>
+                <Button variant="outline" size="icon" onClick={()=> setCustomCalendar((prev) => ({...prev, stepInWeeks: prev.stepInWeeks + 1}))}>
                   <PlusIcon />
                 </Button>
                 <Button variant="outline" size="icon" onClick={()=> {
-                  if(customCalendar.stepInMonths > 1) {setCustomCalendar((prev) => ({...prev, stepInMonths: prev.stepInMonths - 1}))}
+                  if(customCalendar.stepInWeeks > 1) {setCustomCalendar((prev) => ({...prev, stepInWeeks: prev.stepInWeeks - 1}))}
                 }}>
                   <MinusIcon />
                 </Button>
@@ -346,6 +386,7 @@ const createAllTimeClicksDataQuarterly = (): KPIAllTimeClicksConfig[] => {
                     const date = new Date(value)
                     return date.toLocaleDateString("en-US", {
                     month: "short",
+                    day: chartOption == "Custom" ? "numeric" : undefined
                     })
                 }}
                 />
@@ -376,4 +417,6 @@ const createAllTimeClicksDataQuarterly = (): KPIAllTimeClicksConfig[] => {
         </CardContent>
         </Card>
     )
+  }
+
 }

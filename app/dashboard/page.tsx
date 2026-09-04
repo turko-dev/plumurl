@@ -41,7 +41,7 @@ export default function Dashboard() {
     // })
 
 
-        //ALL ANALYTICAL DATA NEEDS TO BE COMPILED TO MONTHS BEFORE PUTTING INTO DASHBOARD DATA
+        //ALLTIMECLICKS DATA NEEDS TO BE COMPILED TO MONTHS BEFORE PUTTING INTO DASHBOARD DATA
 
     let temp = {
       clicksToday: [
@@ -93,10 +93,8 @@ export default function Dashboard() {
 
           {valid() ? <DashboardLargeSkeleton/> : <div><KPIAllTimeClicks inputData={dashboardData?.allTimeClicks} /></div>}
           <div></div>
-          <div className="grid grid-cols-3 gap-4 md:grid-cols-4">
-          
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {valid() ? <DashboardCardSkeleton /> : <KPIClicksToday inputData={dashboardData?.clicksToday} />}
-
           </div>
           
         </DashboardMenu>}
