@@ -15,6 +15,8 @@
 
 #ignore backend files
 *.ts
+debug.tsx
+[plum_id]/page.tsx
 
 
 
