@@ -9,7 +9,10 @@ import KPIClicksToday from "./kpi-clicks-today";
 import { DashboardLargeSkeleton } from "@/components/dashboard-large-skeleton";
 import { KPIGeography } from "./kpi-geography";
 import { KPIBrowser } from "./kpi-browser";
+import { KPIComingSoon } from "./kpi-coming-soon";
 
+import { Button } from "@/components/ui/button"
+import { toast } from "@/components/ui/toast"
 
 type _ClicksToday = {
   clicks: number
@@ -21,19 +24,14 @@ type _AllTimeClicks = {
 }
 
 
+
 type DashboardDataConfig = {
   clicksToday: _ClicksToday[],
   allTimeClicks: _AllTimeClicks[]
 }
 
 export default function Dashboard() {
-//Date Format Helper Function
-  const formatDate = (d: Date): string => {
-      const year = d.getFullYear()
-      const month = String(d.getMonth() + 1).toString()
-      const day = String(d.getDate().toString())
-      return `${year}-${month}-${day}`
-  }
+
 
   const [dashboardData, setDashboardData] = useState<DashboardDataConfig | null>(null)
 
@@ -64,10 +62,15 @@ export default function Dashboard() {
         {date: "2026-01-07", clicks: 105},
         {date: "2026-01-08", clicks: 1110},
         {date: "2026-01-09", clicks: 10113},
+      ],
+      geography: {
+        
+      },
+      browsers: [
+
       ]
     }
     setDashboardData(temp)
-
   }
   const valid = () => {
     return dashboardData?.clicksToday === undefined || dashboardData?.clicksToday === null
@@ -78,6 +81,12 @@ export default function Dashboard() {
     // This is a hook made for testing purposes
     getDashboardData()
   }, [])
+  
+
+    const addToast = (description: string, type: 'success' | 'error' | 'info') => {
+      toast.add({ description: description, type:type})
+    }
+
 
   return(
       <>
@@ -90,15 +99,15 @@ export default function Dashboard() {
         :   
         <DashboardMenu route={"/dashboard"}>
           
-
           {valid() ? <DashboardLargeSkeleton/> : <div><KPIAllTimeClicks inputData={dashboardData?.allTimeClicks} /></div>}
           <div></div>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
             {valid() ? <DashboardCardSkeleton /> : <KPIClicksToday inputData={dashboardData?.clicksToday} />}
             {valid() ? <DashboardCardSkeleton /> : <KPIGeography />}
             {valid() ? <DashboardCardSkeleton /> : <KPIBrowser />}
+            <KPIComingSoon />
           </div>
-          
+          <Button onClick={()=> addToast("Hi there", "success")}>Add</Button>
         </DashboardMenu>}
       </>
   )
