@@ -1,6 +1,7 @@
 'use client'
-
+import { supabase } from '@/lib/supabase'
 import { useEffect, useState } from 'react'
+
 
 type Data = {
     ok: boolean,
@@ -73,6 +74,7 @@ export default function PlumURL() {
         setData({ok: true, headers: headersResult, ip: {ok: !ipData.error, ipv4: ipData.ip}, geolocation: {ok: geoData.status == "success", data: geoData}})
     }
     run()
+    
   }, [])
   return <pre>{JSON.stringify(data, null, 2)}</pre>
 }
