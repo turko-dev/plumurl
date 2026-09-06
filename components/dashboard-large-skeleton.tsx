@@ -1,17 +1,6 @@
 "use client"
-import { Calendar } from "@/components/ui/calendar"
-import { useIsMobile } from "@/hooks/use-mobile"
-import { MinusIcon, PlusIcon } from "lucide-react"
-import {Drawer,DrawerClose,DrawerContent,DrawerDescription,DrawerFooter,DrawerHeader,DrawerTitle,DrawerTrigger,} from "@/components/ui/drawer"
-import {CircleQuestionMark,} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { ButtonGroup } from "@/components/ui/button-group"
-import * as React from "react"
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
-import {Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle,} from "@/components/ui/card"
-import {ChartContainer,ChartTooltip,ChartTooltipContent,type ChartConfig,} from "@/components/ui/chart"
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
-import { useEffect } from "react"
+import {Card,CardContent,CardFooter,CardHeader,} from "@/components/ui/card"
+import {ChartContainer,type ChartConfig,} from "@/components/ui/chart"
 import { Skeleton } from "./ui/skeleton"
 
 const chartConfig = {
@@ -38,7 +27,7 @@ export function DashboardLargeSkeleton() {
         </CardHeader>
         <CardContent  className="min-h-88 px-2 sm:p-6">
             <ChartContainer
-                    className="aspect-auto h-[250px] w-full" config={chartConfig}>
+                    className="aspect-auto h-62.5 w-full" config={chartConfig}>
                         <div className="flex flex-col gap-3">
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-full aspect-square" />
