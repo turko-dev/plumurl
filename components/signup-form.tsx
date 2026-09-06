@@ -10,6 +10,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { supabase } from '@/lib/supabase'
 
 
 
@@ -28,10 +29,7 @@ export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-  const handleAuthentication = () => {
-    // Verification Comes first
-
-  }
+  
 
   const [loginDetails, setLoginDetails] = useState<LoginDetails>({fullName: "", email: "", password: "", confirmPassword: "", msg: {type: "fail", content: ""}})
   useEffect(()=> {
@@ -39,13 +37,12 @@ export function SignupForm({
   }, [loginDetails])
 
 
-const validateLoginDetails = () => {
+const handleAuth = async () => {
   setLoginDetails(prev => {
     const fullName = prev.fullName.trim()
     const email = prev.email.trim()
     const password = prev.password
     const confirmPassword = prev.confirmPassword
-
     if (!fullName) {
       return {
         ...prev,
@@ -97,19 +94,37 @@ const validateLoginDetails = () => {
     }
 
     if (password !== confirmPassword) {
+
+      
       return {
         ...prev,
         msg: { type: 'fail', content: 'Passwords do not match.' }
       }
     }
-
+    authenticate()
     return {
       ...prev,
       msg: { type: 'success', content: 'Details are valid.' }
+    
     }
   })
+  // Authentication
+  
+  
+  
 }
 
+
+const authenticate = async () => {
+  if(loginDetails.msg.type == "success") {
+    const { data, error } = await supabase.auth.signUp({
+      email: loginDetails.email,
+      password: loginDetails.password,
+    })
+    console.log(data, error)
+
+  }
+}
   return (
     <form className={cn("flex flex-col pt-14 gap-6", className)} {...props}>
       <FieldGroup>
@@ -171,10 +186,7 @@ const validateLoginDetails = () => {
           <FieldDescription>Please confirm your password.</FieldDescription>
         </Field>
         <Field>
-          <Button onClick={()=> {
-            validateLoginDetails()
-
-          }}>Create Account</Button>
+          <Button onClick={handleAuth}>Create Account</Button>
         </Field>
         {/* <FieldSeparator>Or continue with</FieldSeparator> */}
         <Field>
