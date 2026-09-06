@@ -1,3 +1,6 @@
+"use client"
+
+import {useEffect, useState} from 'react'
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -5,16 +8,110 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
-  FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+
+
+
+type LoginDetails = {
+  fullName: string
+  email: string
+  password: string
+  confirmPassword: string
+  msg: {
+    type: 'success' | 'fail'
+    content: string
+  }
+}
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  const handleAuthentication = () => {
+    // Verification Comes first
+
+  }
+
+  const [loginDetails, setLoginDetails] = useState<LoginDetails>({fullName: "", email: "", password: "", confirmPassword: "", msg: {type: "fail", content: ""}})
+  useEffect(()=> {
+    console.log(loginDetails)
+  }, [loginDetails])
+
+
+const validateLoginDetails = () => {
+  setLoginDetails(prev => {
+    const fullName = prev.fullName.trim()
+    const email = prev.email.trim()
+    const password = prev.password
+    const confirmPassword = prev.confirmPassword
+
+    if (!fullName) {
+      return {
+        ...prev,
+        msg: { type: 'fail', content: 'Full name is required.' }
+      }
+    }
+
+    if (fullName.length < 2) {
+      return {
+        ...prev,
+        msg: { type: 'fail', content: 'Full name must be at least 2 characters.' }
+      }
+    }
+
+    if (!email) {
+      return {
+        ...prev,
+        msg: { type: 'fail', content: 'Email is required.' }
+      }
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      return {
+        ...prev,
+        msg: { type: 'fail', content: 'Please enter a valid email address.' }
+      }
+    }
+
+    if (!password) {
+      return {
+        ...prev,
+        msg: { type: 'fail', content: 'Password is required.' }
+      }
+    }
+
+    if (password.length < 8) {
+      return {
+        ...prev,
+        msg: { type: 'fail', content: 'Password must be at least 8 characters long.' }
+      }
+    }
+
+    if (!confirmPassword) {
+      return {
+        ...prev,
+        msg: { type: 'fail', content: 'Please confirm your password.' }
+      }
+    }
+
+    if (password !== confirmPassword) {
+      return {
+        ...prev,
+        msg: { type: 'fail', content: 'Passwords do not match.' }
+      }
+    }
+
+    return {
+      ...prev,
+      msg: { type: 'success', content: 'Details are valid.' }
+    }
+  })
+}
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <form className={cn("flex flex-col pt-14 gap-6", className)} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Create your account</h1>
@@ -30,6 +127,7 @@ export function SignupForm({
             placeholder="John Doe"
             required
             className="bg-background"
+            onChange={(e)=> {setLoginDetails({...loginDetails, fullName: e.target.value})}}
           />
         </Field>
         <Field>
@@ -40,6 +138,8 @@ export function SignupForm({
             placeholder="m@example.com"
             required
             className="bg-background"
+            onChange={(e)=> {setLoginDetails({...loginDetails, email: e.target.value})}}
+
           />
           <FieldDescription>
             We&apos;ll use this to contact you. We will not share your email
@@ -53,6 +153,7 @@ export function SignupForm({
             type="password"
             required
             className="bg-background"
+            onChange={(e)=> {setLoginDetails({...loginDetails, password: e.target.value})}}
           />
           <FieldDescription>
             Must be at least 8 characters long.
@@ -65,11 +166,15 @@ export function SignupForm({
             type="password"
             required
             className="bg-background"
+            onChange={(e)=> {setLoginDetails({...loginDetails, confirmPassword: e.target.value})}}
           />
           <FieldDescription>Please confirm your password.</FieldDescription>
         </Field>
         <Field>
-          <Button type="submit">Create Account</Button>
+          <Button onClick={()=> {
+            validateLoginDetails()
+
+          }}>Create Account</Button>
         </Field>
         {/* <FieldSeparator>Or continue with</FieldSeparator> */}
         <Field>
@@ -84,6 +189,9 @@ export function SignupForm({
           </Button> */}
           <FieldDescription className="px-6 text-center">
             Already have an account? <a href="/log-in">Log In</a>
+          </FieldDescription>
+          <FieldDescription className={`px-6 text-center ${loginDetails.msg.type == "success" ? "text-green-400" : "text-red-400"}`}>
+            {loginDetails.msg.content}
           </FieldDescription>
         </Field>
       </FieldGroup>

@@ -58,7 +58,6 @@ export default function PlumURL() {
     ip:null, 
     geolocation: null
   })
-  
   useEffect(() => {
     const run = async () => {
         const payload = collectClientData()
@@ -73,8 +72,9 @@ export default function PlumURL() {
         }
         setData({ok: true, headers: headersResult, ip: {ok: !ipData.error, ipv4: ipData.ip}, geolocation: {ok: geoData.status == "success", data: geoData}})
     }
-    run()
     
+    run()
   }, [])
+  
   return <pre>{JSON.stringify(data, null, 2)}</pre>
 }

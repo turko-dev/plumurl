@@ -13,18 +13,15 @@ import { KPIComingSoon } from "./kpi-coming-soon";
 
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/toast"
+import { supabase } from "@/lib/supabase";
 
 type _ClicksToday = {
   clicks: number
 }
-
 type _AllTimeClicks = {
   date: string, 
   clicks: number
 }
-
-
-
 type DashboardDataConfig = {
   clicksToday: _ClicksToday[],
   allTimeClicks: _AllTimeClicks[]
@@ -36,12 +33,7 @@ export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardDataConfig | null>(null)
 
   const getDashboardData = () => { //This function gets the dashboard data for the whole dashboard.
-    // setDashboardData({
-    //   clicksToday: [10, 20, 231, 412, 120, 214]
-    // })
-
-
-        //ALLTIMECLICKS DATA NEEDS TO BE COMPILED TO MONTHS BEFORE PUTTING INTO DASHBOARD DATA
+    //ALLTIMECLICKS DATA NEEDS TO BE COMPILED TO MONTHS BEFORE PUTTING INTO DASHBOARD DATA
 
     let temp = {
       clicksToday: [
@@ -75,20 +67,23 @@ export default function Dashboard() {
   const valid = () => {
     return dashboardData?.clicksToday === undefined || dashboardData?.clicksToday === null
   }
-
   const [loading, setLoading] = useState<boolean>(false);
+  const [auth, setAuth] = useState<boolean>(false)
+  
+  const authenticate = async () => {
+    const {data} = await supabase.auth.getUser()
+    if(data.user != null) setAuth(true)
+    else window.location.href = "/log-in"
+  }
   useEffect(()=> {
     // This is a hook made for testing purposes
     getDashboardData()
+    authenticate()
   }, [])
-  
-
-    const addToast = (description: string, type: 'success' | 'error' | 'info') => {
-      toast.add({ description: description, type:type})
-    }
-
-
-  return(
+  const addToast = (description: string, type: 'success' | 'error' | 'info') => {
+    toast.add({ description: description, type:type})
+  }
+  return auth && (
       <>
         {loading  ? // Skeleton Start (true when still loading, false when content is ready)
         <DashboardMenu route={"/dashboard"}>
