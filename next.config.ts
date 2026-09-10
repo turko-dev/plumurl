@@ -1,7 +1,6 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
-};
-
-export default nextConfig;
+module.exports = {
+  env: {
+    DB_URL: process.env.DB_URL!,
+    DB_PUBLISHABLE_KEY: process.env.DB_PUBLISHABLE_KEY
+  },
+}

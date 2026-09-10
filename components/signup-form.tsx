@@ -29,13 +29,8 @@ export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-  
 
-  const [loginDetails, setLoginDetails] = useState<LoginDetails>({fullName: "", email: "", password: "", confirmPassword: "", msg: {type: "fail", content: ""}})
-  useEffect(()=> {
-    console.log(loginDetails)
-  }, [loginDetails])
-
+const [loginDetails, setLoginDetails] = useState<LoginDetails>({fullName: "", email: "", password: "", confirmPassword: "", msg: {type: "fail", content: ""}})
 
 const handleAuth = async () => {
   setLoginDetails(prev => {
@@ -43,88 +38,51 @@ const handleAuth = async () => {
     const email = prev.email.trim()
     const password = prev.password
     const confirmPassword = prev.confirmPassword
-    if (!fullName) {
-      return {
-        ...prev,
-        msg: { type: 'fail', content: 'Full name is required.' }
-      }
-    }
 
-    if (fullName.length < 2) {
-      return {
-        ...prev,
-        msg: { type: 'fail', content: 'Full name must be at least 2 characters.' }
-      }
-    }
-
-    if (!email) {
-      return {
-        ...prev,
-        msg: { type: 'fail', content: 'Email is required.' }
-      }
-    }
+    if (!fullName) {return {...prev,msg: { type: 'fail', content: 'Full name is required.' }}}
+    if (fullName.length < 2) {return {...prev,msg: { type: 'fail', content: 'Full name must be at least 2 characters.' }}}
+    if (!email) {return {...prev,msg: { type: 'fail', content: 'Email is required.' }}}
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return {
-        ...prev,
-        msg: { type: 'fail', content: 'Please enter a valid email address.' }
-      }
-    }
+    if (!emailRegex.test(email)) {return {...prev, msg: { type: 'fail', content: 'Please enter a valid email address.' }}}
+    if (!password) {return {...prev,msg: { type: 'fail', content: 'Password is required.' }}}
+    if (password.length < 8) {return {...prev,msg: { type: 'fail', content: 'Password must be at least 8 characters long.' }}}
+    if (!confirmPassword) {return {...prev,msg: { type: 'fail', content: 'Please confirm your password.' }}}
+    if (password !== confirmPassword) {return {...prev, msg: { type: 'fail', content: 'Passwords do not match.' }}}
 
-    if (!password) {
-      return {
-        ...prev,
-        msg: { type: 'fail', content: 'Password is required.' }
-      }
-    }
 
-    if (password.length < 8) {
-      return {
-        ...prev,
-        msg: { type: 'fail', content: 'Password must be at least 8 characters long.' }
-      }
-    }
+    
 
-    if (!confirmPassword) {
-      return {
-        ...prev,
-        msg: { type: 'fail', content: 'Please confirm your password.' }
-      }
-    }
-
-    if (password !== confirmPassword) {
-
-      
-      return {
-        ...prev,
-        msg: { type: 'fail', content: 'Passwords do not match.' }
-      }
-    }
-    authenticate()
     return {
       ...prev,
       msg: { type: 'success', content: 'Details are valid.' }
     
     }
+
   })
-  // Authentication
-  
-  
-  
 }
 
 
 const authenticate = async () => {
-  if(loginDetails.msg.type == "success") {
-    const { data, error } = await supabase.auth.signUp({
-      email: loginDetails.email,
-      password: loginDetails.password,
-    })
-    console.log(data, error)
+  console.log("Trying to signup")
+  const { data, error } = await supabase.auth.signUp({
+    email: loginDetails.email,
+    password: loginDetails.password,
+  })
+  console.log(data)
 
+  if(error == null) {
+    setLoginDetails({...loginDetails, msg: { type: 'success', content: 'Please check your email address for a confirmation email.' }})
   }
+  else {
+    setLoginDetails({...loginDetails, msg: { type: 'fail', content: 'An error occured while registering your account.' }})
+    
+  }
+  
 }
+useEffect(()=> {
+  if(loginDetails.msg.type == "success") authenticate()
+}, [loginDetails])
   return (
     <form className={cn("flex flex-col pt-14 gap-6", className)} {...props}>
       <FieldGroup>
