@@ -1,3 +1,4 @@
+"use client"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -7,13 +8,34 @@ import {
   FieldLabel,
   FieldSeparator,
 } from "@/components/ui/field"
+import {useState} from 'react'
 import { Input } from "@/components/ui/input"
 
+type LoginDetails = {
+  email: string
+  password: string
+  msg: {
+    type: 'success' | 'fail' | 'final'
+    content: string
+  }
+}
+
 export function LoginForm({className, ...props}: React.ComponentProps<"form">) {
-
-
+  const [loginDetails, setLoginDetails] = useState<LoginDetails>({email: "", password: "", msg: {type: "fail", content: ""}})
   
+  const handleAuthentication = async () => {
 
+    console.log(loginDetails)
+    // if(validation == null) {
+    //   setLoginDetails({...loginDetails, msg: {type: "success", content: "Creating your account..."}})
+    //   await registerUserWithEmail({email: loginDetails.email, password: loginDetails.password}).then((e: any)=> {
+    //     setLoginDetails({...loginDetails, msg: e})
+    //   })
+    // }
+    // else {
+    //   setLoginDetails({...loginDetails, msg: {type: "fail", content: validation}})
+    // }
+}
   return (
     <form className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
@@ -34,7 +56,8 @@ export function LoginForm({className, ...props}: React.ComponentProps<"form">) {
           <Input id="password" type="password" required />
         </Field>
         <Field>
-          <Button type="submit">Login</Button>
+          {/* Button needs type="submit" */}
+          <Button onClick={handleAuthentication}>Login</Button>
         </Field>
         <FieldSeparator>
           <a

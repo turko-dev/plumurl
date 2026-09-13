@@ -10,7 +10,17 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { supabase } from '@/lib/supabase'
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
+
+import registerUserWithEmail from '@/lib/registerUserWithEmail'
+import { Spinner } from './ui/spinner'
+import { ArrowLeft, CheckIcon, InfoIcon, StepBack, StepBackIcon } from 'lucide-react'
+import { ButtonGroup } from './ui/button-group'
 
 
 
@@ -20,7 +30,7 @@ type LoginDetails = {
   password: string
   confirmPassword: string
   msg: {
-    type: 'success' | 'fail'
+    type: 'success' | 'fail' | 'final'
     content: string
   }
 }
@@ -32,60 +42,64 @@ export function SignupForm({
 
 const [loginDetails, setLoginDetails] = useState<LoginDetails>({fullName: "", email: "", password: "", confirmPassword: "", msg: {type: "fail", content: ""}})
 
-const handleAuth = async () => {
-  setLoginDetails(prev => {
-    const fullName = prev.fullName.trim()
-    const email = prev.email.trim()
-    const password = prev.password
-    const confirmPassword = prev.confirmPassword
-
-    if (!fullName) {return {...prev,msg: { type: 'fail', content: 'Full name is required.' }}}
-    if (fullName.length < 2) {return {...prev,msg: { type: 'fail', content: 'Full name must be at least 2 characters.' }}}
-    if (!email) {return {...prev,msg: { type: 'fail', content: 'Email is required.' }}}
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {return {...prev, msg: { type: 'fail', content: 'Please enter a valid email address.' }}}
-    if (!password) {return {...prev,msg: { type: 'fail', content: 'Password is required.' }}}
-    if (password.length < 8) {return {...prev,msg: { type: 'fail', content: 'Password must be at least 8 characters long.' }}}
-    if (!confirmPassword) {return {...prev,msg: { type: 'fail', content: 'Please confirm your password.' }}}
-    if (password !== confirmPassword) {return {...prev, msg: { type: 'fail', content: 'Passwords do not match.' }}}
-
-
-    
-
-    return {
-      ...prev,
-      msg: { type: 'success', content: 'Details are valid.' }
-    
-    }
-
-  })
-}
-
-
-const authenticate = async () => {
-  console.log("Trying to signup")
-  const { data, error } = await supabase.auth.signUp({
-    email: loginDetails.email,
-    password: loginDetails.password,
-  })
-  console.log(data)
-
-  if(error == null) {
-    setLoginDetails({...loginDetails, msg: { type: 'success', content: 'Please check your email address for a confirmation email.' }})
+const handleAuthentication = async () => {
+  const validation = validateLoginDetails()
+  if(validation == null) {
+    setLoginDetails({...loginDetails, msg: {type: "success", content: "Creating your account..."}})
+    await registerUserWithEmail({email: loginDetails.email, password: loginDetails.password}).then((e: any)=> {
+      setLoginDetails({...loginDetails, msg: e})
+    })
   }
   else {
-    setLoginDetails({...loginDetails, msg: { type: 'fail', content: 'An error occured while registering your account.' }})
-    
+    setLoginDetails({...loginDetails, msg: {type: "fail", content: validation}})
   }
-  
 }
-useEffect(()=> {
-  if(loginDetails.msg.type == "success") authenticate()
-}, [loginDetails])
+function validateLoginDetails(): string | null {
+  const fullName = loginDetails.fullName.trim();
+  const email = loginDetails.email.trim();
+  const { password, confirmPassword } = loginDetails;
+
+  if (!fullName) return 'Full name is required.';
+  if (fullName.length < 2) return 'Full name must be at least 2 characters.';
+  if (!email) return 'Email is required.';
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) return 'Please enter a valid email address.';
+  if (!password) return 'Password is required.';
+  if (password.length < 8) return 'Password must be at least 8 characters long.';
+  if (!confirmPassword) return 'Please confirm your password.';
+  if (password !== confirmPassword) return 'Passwords do not match.';
+
+  return null; // no errors
+}
+
+
+
   return (
     <form className={cn("flex flex-col pt-14 gap-6", className)} {...props}>
+
+      {loginDetails.msg.type == "success" || loginDetails.msg.type == "final" ? 
       <FieldGroup>
+        <div className="flex flex-col items-center gap-1 text-center">
+            <h1 className="text-2xl font-bold">Create your account</h1>
+            <p className="text-sm text-balance text-muted-foreground">We are setting up your account.</p>
+        </div>
+        <Field>
+            <Alert>
+              {loginDetails.msg.type == "success" ? <Spinner color="rgb(134 239 172)" /> : <CheckIcon />}
+              {loginDetails.msg.type == "success" ? <AlertTitle className={`text-balance text-green-300`}>Hang on.</AlertTitle> : <AlertTitle className={`text-balance text-foreground`}>Success!</AlertTitle>}
+              <AlertDescription className={`text-balance ${loginDetails.msg.type == "success" ? "text-green-300" : "text-muted-foreground"}`}>{loginDetails.msg.content}</AlertDescription>
+            </Alert>
+        </Field>
+        {loginDetails.msg.type == "final" ? <ButtonGroup className="mx-auto gap-1">
+          <a href={process.env.NEXT_PUBLIC_BASE_URL!}><Button size="default" variant="outline">
+            <ArrowLeft />
+            Homepage
+          </Button></a>
+          <a href={`${process.env.NEXT_PUBLIC_BASE_URL!}/log-in`}><Button variant="outline">Log In</Button></a>
+        </ButtonGroup> : null}
+        
+      </FieldGroup> : <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Create your account</h1>
           <p className="text-sm text-balance text-muted-foreground">
@@ -99,7 +113,7 @@ useEffect(()=> {
             type="text"
             placeholder="John Doe"
             required
-            className="bg-background"
+            className="bg-background text-sm"
             onChange={(e)=> {setLoginDetails({...loginDetails, fullName: e.target.value})}}
           />
         </Field>
@@ -110,9 +124,8 @@ useEffect(()=> {
             type="email"
             placeholder="m@example.com"
             required
-            className="bg-background"
+            className="bg-background text-sm"
             onChange={(e)=> {setLoginDetails({...loginDetails, email: e.target.value})}}
-
           />
           <FieldDescription>
             We&apos;ll use this to contact you. We will not share your email
@@ -144,8 +157,9 @@ useEffect(()=> {
           <FieldDescription>Please confirm your password.</FieldDescription>
         </Field>
         <Field>
-          <Button onClick={handleAuth}>Create Account</Button>
+          <Button onClick={handleAuthentication}>Create Account</Button>
         </Field>
+        
         {/* <FieldSeparator>Or continue with</FieldSeparator> */}
         <Field>
           {/* <Button variant="outline" type="button">
@@ -160,11 +174,13 @@ useEffect(()=> {
           <FieldDescription className="px-6 text-center">
             Already have an account? <a href="/log-in">Log In</a>
           </FieldDescription>
-          <FieldDescription className={`px-6 text-center ${loginDetails.msg.type == "success" ? "text-green-400" : "text-red-400"}`}>
+          <FieldDescription className={`flex-col justify-center items-center flex gap-2 px-6 text-center text-red-400`}>
             {loginDetails.msg.content}
           </FieldDescription>
+         
         </Field>
       </FieldGroup>
+      }
     </form>
   )
 }

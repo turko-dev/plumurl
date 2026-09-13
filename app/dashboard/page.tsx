@@ -1,5 +1,4 @@
 "use client"
-
 import { DashboardCardSkeleton } from "@/components/dashboard-card-skeleton";
 import { DashboardCardSkeletonAlt } from "@/components/dashboard-card-skeleton-alt";
 import DashboardMenu from "@/components/dashboard-menu";
@@ -10,7 +9,6 @@ import { DashboardLargeSkeleton } from "@/components/dashboard-large-skeleton";
 import { KPIGeography } from "./kpi-geography";
 import { KPIBrowser } from "./kpi-browser";
 import { KPIComingSoon } from "./kpi-coming-soon";
-
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/toast"
 import { supabase } from "@/lib/supabase";
@@ -29,7 +27,7 @@ type DashboardDataConfig = {
 
 export default function Dashboard() {
 
-
+  //dashboardData has all data for the user's links
   const [dashboardData, setDashboardData] = useState<DashboardDataConfig | null>(null)
 
   const getDashboardData = () => { //This function gets the dashboard data for the whole dashboard.
@@ -64,9 +62,10 @@ export default function Dashboard() {
     }
     setDashboardData(temp)
   }
-  const valid = () => {
-    return dashboardData?.clicksToday === undefined || dashboardData?.clicksToday === null
-  }
+
+  //Validate 
+  const valid = (attr: any) => {return attr === undefined || attr === null}
+
   const [loading, setLoading] = useState<boolean>(false);
   const [auth, setAuth] = useState<boolean>(false)
   
@@ -91,15 +90,14 @@ export default function Dashboard() {
           <div className="grid auto-rows-min gap-4 h-full md:grid-cols-2"><DashboardCardSkeleton /><div className="flex flex-row md:flex-row h-full gap-4"><DashboardCardSkeletonAlt /><DashboardCardSkeletonAlt /></div></div>
           <div className="grid grid-cols-3 gap-4 md:grid-cols-6"><DashboardCardSkeleton /><DashboardCardSkeleton /><DashboardCardSkeleton /><DashboardCardSkeleton /><DashboardCardSkeleton /><DashboardCardSkeleton /></div>
         </DashboardMenu> //Skeleton End
-        :   
+        :
         <DashboardMenu route={"/dashboard"}>
-          
-          {valid() ? <DashboardLargeSkeleton/> : <div><KPIAllTimeClicks inputData={dashboardData?.allTimeClicks} /></div>}
+          {valid(dashboardData?.allTimeClicks) ? <DashboardLargeSkeleton/> : <div><KPIAllTimeClicks inputData={dashboardData?.allTimeClicks} /></div>}
           <div></div>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-            {valid() ? <DashboardCardSkeleton /> : <KPIClicksToday inputData={dashboardData?.clicksToday} />}
-            {valid() ? <DashboardCardSkeleton /> : <KPIGeography />}
-            {valid() ? <DashboardCardSkeleton /> : <KPIBrowser />}
+            {valid(dashboardData?.clicksToday) ? <DashboardCardSkeleton /> : <KPIClicksToday inputData={dashboardData?.clicksToday} />}
+            {valid(dashboardData?.clicksToday) ? <DashboardCardSkeleton /> : <KPIGeography />}
+            {valid(dashboardData?.clicksToday) ? <DashboardCardSkeleton /> : <KPIBrowser />}
             <KPIComingSoon />
           </div>
           <Button onClick={()=> addToast("Hi there", "success")}>Add</Button>
