@@ -34,8 +34,6 @@ export function NavMain({
               <CirclePlus />
               <span className="shimmer font-mono">Shorten URL</span>
             </SidebarMenuButton>
-
-
             <Tooltip>
               <TooltipTrigger delay={0} render={
                 <a href="/resources">
