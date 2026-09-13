@@ -12,6 +12,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip"
 
 export function NavMain({
@@ -39,7 +40,7 @@ export function NavMain({
               <TooltipTrigger delay={0} render={
                 <a href="/resources">
                 <Button size="icon" className="size-8 group-data-[collapsible=icon]:opacity-0" variant="outline">
-                  <LibraryBig strokeWidth={2} color={"var(--primary-foreground)"} />
+                  <LibraryBig strokeWidth={2} color={"var(--foreground)"} />
                 </Button></a>
               } />
               <TooltipContent className="text-primary-foreground font-mono text-sm">

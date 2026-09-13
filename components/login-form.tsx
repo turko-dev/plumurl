@@ -8,8 +8,10 @@ import {
   FieldLabel,
   FieldSeparator,
 } from "@/components/ui/field"
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import { Input } from "@/components/ui/input"
+import authenticateUserWithEmail from "@/lib/authenticateUserWithEmail"
+import { Spinner } from "./ui/spinner"
 
 type LoginDetails = {
   email: string
@@ -21,21 +23,21 @@ type LoginDetails = {
 }
 
 export function LoginForm({className, ...props}: React.ComponentProps<"form">) {
-  const [loginDetails, setLoginDetails] = useState<LoginDetails>({email: "", password: "", msg: {type: "fail", content: ""}})
-  
-  const handleAuthentication = async () => {
 
-    console.log(loginDetails)
-    // if(validation == null) {
-    //   setLoginDetails({...loginDetails, msg: {type: "success", content: "Creating your account..."}})
-    //   await registerUserWithEmail({email: loginDetails.email, password: loginDetails.password}).then((e: any)=> {
-    //     setLoginDetails({...loginDetails, msg: e})
-    //   })
-    // }
-    // else {
-    //   setLoginDetails({...loginDetails, msg: {type: "fail", content: validation}})
-    // }
-}
+
+  const [loginDetails, setLoginDetails] = useState<LoginDetails>({email: "", password: "", msg: {type: "fail", content: ""}})
+
+  const handleAuthentication = async () => {
+    setLoginDetails({...loginDetails, msg: {type: "success", content: "Signing in..."}})
+    await authenticateUserWithEmail({email: loginDetails.email, password: loginDetails.password}).then((e: any) => {
+      setLoginDetails({...loginDetails, msg: e})
+    })
+  }
+  
+  useEffect(()=> {
+    if(loginDetails.msg.type == "final") {window.location.href="dashboard"}
+  }, [loginDetails])
+
   return (
     <form className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
@@ -47,13 +49,17 @@ export function LoginForm({className, ...props}: React.ComponentProps<"form">) {
         </div>
         <Field>
           <FieldLabel htmlFor="email">Email</FieldLabel>
-          <Input id="email" type="email" placeholder="email@example.com" required />
+          <Input onChange={(e)=>setLoginDetails({
+            ...loginDetails, email: e.target.value
+          })} id="email" type="email" placeholder="email@example.com" required />
         </Field>
         <Field>
           <div className="flex items-center">
             <FieldLabel htmlFor="password">Password</FieldLabel>
           </div>
-          <Input id="password" type="password" required />
+          <Input onChange={(e)=>setLoginDetails({
+            ...loginDetails, password: e.target.value
+          })} id="password" type="password" required />
         </Field>
         <Field>
           {/* Button needs type="submit" */}
@@ -88,6 +94,10 @@ export function LoginForm({className, ...props}: React.ComponentProps<"form">) {
         </Field> */}
         <FieldDescription className="px-6 text-center">
             Don't have an account? <a href="/sign-up">Sign Up</a>
+          </FieldDescription>
+            <FieldDescription className={`flex-col justify-center items-center flex gap-2 px-6 text-center text-red-400 ${loginDetails.msg.type == "success" ? "text-foreground" : loginDetails.msg.type == "fail" ? "text-red-400" : "text-foreground"}`}>
+            {loginDetails.msg.type == "success" || loginDetails.msg.type == "final" ? <Spinner /> : null}
+            {loginDetails.msg.content}
           </FieldDescription>
       </FieldGroup>
     </form>
