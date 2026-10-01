@@ -1,6 +1,13 @@
+"use client"
 import Link from "next/link"
+import {useEffect, useState} from "react"
 import { Button } from "./ui/button"
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "./ui/navigation-menu"
+import { supabase } from "@/lib/supabase"
+import { Spinner } from "./ui/spinner"
+
+
+
 function ListItem({
   title,
   children,
@@ -17,8 +24,25 @@ function ListItem({
   )
 }
 
-
 export default function NavbarDesktopLinks() {
+
+
+    // Null is unmounted, true is authenticated, false is not authenticated
+    const [isAuth, setIsAuth] = useState<null | boolean>(null);
+
+    // Get User Auth State
+    const getUser = async () => {
+        const {data, error} = await supabase.auth.getUser()
+        if(data.user) setIsAuth(true)
+        else if(error != null) setIsAuth(false)
+    }  
+
+    //Main UseEffect
+    useEffect(()=> {
+        getUser()
+    }, [])  
+    
+    //JSX
     return(
 
 
@@ -82,8 +106,21 @@ export default function NavbarDesktopLinks() {
                             </NavigationMenuContent>
                          </NavigationMenuItem>
                          <div className="flex flex-row justify-baseline items-center gap-2 mx-4">
-                            <a href="/log-in"><Button variant="default">Log In</Button></a>
-                            <a href="/sign-up"><Button variant="outline">Sign Up</Button></a>
+                            {isAuth === null && (
+                                <Spinner/>
+                            )}
+                            {isAuth === true && (
+                                <>
+                                <a href="/dashboard"><Button variant="default">Dashboard</Button></a>
+                                <a href="/log-out"><Button variant="destructive">Log Out</Button></a>
+                                </>
+                            )}
+                            {isAuth === false && (
+                                <>
+                                    <a href="/log-in"><Button variant="default">Log In</Button></a>
+                                    <a href="/sign-up"><Button variant="outline">Sign Up</Button></a>
+                                </>
+                            )}
                         </div>
                     </NavigationMenuList>
                 </NavigationMenu>
