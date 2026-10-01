@@ -7,7 +7,6 @@ export default function Resources() {
 
             <ResourcesDashboard route="/resources">
 
-                {/* Main page for resources */}
 
             </ResourcesDashboard>
         </Page>
